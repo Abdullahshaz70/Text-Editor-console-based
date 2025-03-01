@@ -4,7 +4,9 @@
 #include <windows.h>
 #include <math.h>
 #include<vector>
-using namespace std;
+#include "line.h"
+
+
 
 void getRowColbyLeftClick(int& rpos, int& cpos)
 {
@@ -49,49 +51,168 @@ void color(int k)
 	SetConsoleTextAttribute(hConsole, k);
 }
 
+
+
 int main() {
-
-	int cursorRow = 0, cursorColumn = 0, documnetLine = 0;
 	
-	vector<vector<char>*> Document;
-	vector <char>* v = new vector<char>{};
+	int cursorRow = 0 ,cursorColumn = 0;
 
-	Document.push_back(v);
-
+	line A;
+	
 	while (true) {
-
 		if (_kbhit()) {
-			int key = _getch();
 
-			if (key == 224) {
-				key = _getch();
+			char sym = _getch();
 
-				switch (key) {
-				case 72:
-					cursorRow--;
-					break;
-				case 80:
-					cursorRow++;
-					break;
-				case 77:
-					cursorColumn++;
-					break;
-				case 75:
+			switch (sym) {
+				case 'h':  
 					cursorColumn--;
+					if (cursorColumn == -1)
+						cursorColumn = 0;
+					
+					gotoRowCol(cursorRow, cursorColumn);
 					break;
 
-				}
-				gotoRowCol(cursorRow, cursorColumn);
+				case 'l': 
+					if (A.Cs.size() != cursorColumn)
+						cursorColumn++;
+					gotoRowCol(cursorRow, cursorColumn);
+					break;
+
+				case 8:  
+					if (cursorColumn > 0) {
+						delete A.Cs[cursorColumn - 1];
+						A.Cs.erase(A.Cs.begin() + cursorColumn - 1);
+						cout << " ";
+						cursorColumn--;
+					}
+
+					system("cls");
+					for (int i = 0; i < A.Cs.size(); i++) {
+						gotoRowCol(cursorRow, i);
+						cout << A.Cs[i];
+					}
+					break;
+
+				default:  
+					char* newChar = new char[2];
+					newChar[0] = sym;
+					newChar[1] = '\0';
+
+					A.Cs.insert(A.Cs.begin() + cursorColumn, newChar);
+					cursorColumn++;
+
+					system("cls");
+					for (int i = 0; i < A.Cs.size(); i++) {
+						gotoRowCol(cursorRow, i);
+						cout << A.Cs[i];
+					}
+
+					gotoRowCol(cursorRow, cursorColumn);
+					break;
 			}
-			else {
-				char sym = (char)key;
-				gotoRowCol(cursorRow, cursorColumn);
-				cout << sym;
-			}
+
+			
+					
 
 		}
 
 	}
+	
+	
 
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//if (sym == 'h')
+			//{
+			//	cursorColumn--;
+			//	if (cursorColumn == -1)
+			//		cursorColumn=0;
+			//
+			//	gotoRowCol(cursorRow, cursorColumn);
+			//}
+			//else if (sym == 'l') {
+			//
+			//	if(A.Cs.size()!=cursorColumn)
+			//		cursorColumn++;
+			//
+			//	gotoRowCol(cursorRow, cursorColumn);
+			//
+			//}
+			//else if (int(sym) == 8) {
+			//
+			//	if (cursorColumn > 0) {
+			//
+			//		delete A.Cs[cursorColumn-1];
+			//		A.Cs.erase(A.Cs.begin() + cursorColumn-1);
+			//		cout << " ";
+			//		//gotoRowCol(cursorRow, cursorColumn);
+			//		cursorColumn--;
+			//	}
+			//
+			//	system("cls");
+			//	for (int i = 0; i < A.Cs.size(); i++) {
+			//		gotoRowCol(cursorRow, i);
+			//		cout << A.Cs[i];
+			//	}
+			//}
+			//else {
+			//	char* newChar = new char[2]; 
+			//	newChar[0] = sym;
+			//	newChar[1] = '\0'; 
+			//
+			//	A.Cs.insert(A.Cs.begin() + cursorColumn, newChar);
+			//	cursorColumn++;
+			//
+			//
+			//	system("cls");
+			//	for (int i = 0; i < A.Cs.size(); i++) {
+			//		gotoRowCol(cursorRow, i);
+			//		cout << A.Cs[i];
+			//	}
+			//
+			//
+			//	gotoRowCol(cursorRow, cursorColumn);
+		//
+			//}
