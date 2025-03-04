@@ -1,0 +1,13 @@
+#pragma once
+
+#include<windows.h>
+
+void gotoRowCol(int rpos, int cpos);
+void color(int k);
+void hideConsoleCursor();
+void getRowColbyLeftClick(int& rpos, int& cpos);
+
+int strsize(const char* data);
+//char* stringcopy(const char* src);
+bool isDelimiter(char c);
+
