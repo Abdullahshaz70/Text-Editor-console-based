@@ -20,7 +20,9 @@ public:
     void clearLine(int row, int col, int lineLength);
 
     int findNextWord(int index);           
-    int findPrevWord(int index);          
+    int findPrevWord(int index);  
+    void startofLine(int& index);
+    void endofLine(int& index);
     char getCharAt(int index);   
 
 

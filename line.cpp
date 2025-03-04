@@ -37,6 +37,7 @@ void line::clearLine(int row, int col, int lineLength) {
 }
 
 int line::size() {
+    
     int count = 0;
     for (int i = 0; Cs[i] != '\0'; i++)
         count++;
@@ -109,6 +110,15 @@ char line::getCharAt(int index) {
         return '\0';
     return Cs[index];
 }
+
+void line::startofLine(int& index) {
+    index = 0;
+}
+void line::endofLine(int& index) {
+    index = size();
+}
+
+
 
 void line::stringcopy(const char* src) {
     if (src == nullptr) {

@@ -74,10 +74,10 @@ int strsize(const char* data) {
 
 
 bool isDelimiter(char c) {
-	return (c == ' ' || c == '\t' || c == '\n' || c == '.' || c == ',' ||
-		c == ';' || c == ':' || c == '!' || c == '?' || c == '(' || c == ')' ||
-		c == '{' || c == '}' || c == '[' || c == ']' || c == '"' || c == '\'' ||
-		c == '-' || c == '_');
+	return (c == ' ' or c == '\t' or c == '\n' or c == '.' or c == ',' or
+		c == ';' or c == ':' or c == '!' or c == '?' or c == '(' or c == ')' or
+		c == '{' or c == '}' or c == '[' or c == ']' or c == '"' or c == '\'' or
+		c == '-' or c == '_');
 }
 
 

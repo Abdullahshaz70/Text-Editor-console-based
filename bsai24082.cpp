@@ -2,6 +2,7 @@
 #include <iostream>
 #include <conio.h>
 #include "mode.h"
+#include "paragraph.h"
 
 using namespace std;
 
@@ -29,24 +30,35 @@ void modeChanges(char sym) {
 int main() {
     cursor c;
     line A;
+    paragraph P;
     normalMode = true;
 
+    P.addline();
     while (true) {
         if (_kbhit()) {
             char sym = _getch();
 
             modeChanges(sym);
-
+           
             if (insertionMode) {
                 switch (sym) {
                 case 8: 
                     if (c.cursorColumn > 0) {
-                        A.deleteAt(c.cursorColumn - 1);
+                        //A.deleteAt(c.cursorColumn - 1);
+                        P.deleteAt(c.cursorRow, c.cursorColumn - 1);
                         c.cursorColumn--;
                     }
                     break;
+                case 13:
+                    P.insertline(c.cursorRow + 1);
+                    c.cursorRow++;
+                    if(c.cursorColumn>= P.getLine(c.cursorRow)->size())
+                    c.cursorColumn = 0;
+                    break;
                 default:
-                    A.insertAt(c.cursorColumn, sym);
+                    //A.insertAt(c.cursorColumn, sym);
+                    P.insertAt(c.cursorRow, c.cursorColumn, sym);
+                    
                     c.cursorColumn++;
                     break;
                 }
@@ -58,47 +70,64 @@ int main() {
                         c.cursorColumn--;
                     break;
                 case 'l':
-                    if (c.cursorColumn < A.size())
+                    //if (c.cursorColumn < A.size())
+                    if (c.cursorColumn < P.getLine(c.cursorRow)->size())
                         c.cursorColumn++;
                     break;
                 case 'w':
-                    c.cursorColumn = A.findNextWord(c.cursorColumn);
+                    c.cursorColumn = P.getLine(c.cursorRow)->findNextWord(c.cursorColumn);
                     break;
                 case 'b':
-                    c.cursorColumn = A.findPrevWord(c.cursorColumn);
+                    c.cursorColumn = P.getLine(c.cursorRow)->findPrevWord(c.cursorColumn);
                     break;
                 case 'd':
                     sym = _getch();
-                    if (sym == 'd') {
-                        A.deleteFrom(0);
+                    if (sym == 'd'){
+                        //A.deleteFrom(0);
+                        P.deletefrom(c.cursorRow, 0);
                         c.cursorColumn = 0;
                     }
+                    else
+                        P.printParagraph();
                     break;
                 case 'D':
-                    A.deleteFrom(c.cursorColumn);
+                    //A.deleteFrom(c.cursorColumn);
+                    P.deletefrom(c.cursorRow, c.cursorColumn);
                     break;
                 case 'x':
-                    A.deleteAt(c.cursorColumn);
+                    //A.deleteAt(c.cursorColumn);
+                    P.deleteAt(c.cursorRow, c.cursorColumn);
                     break;
                 case '0':
-                    c.cursorColumn = 0;
+                    //c.cursorColumn = 0;
+                    P.getLine(c.cursorRow)->startofLine(c.cursorColumn);
                     break;
                 case '$':
-                    c.cursorColumn = A.size();
+                    //c.cursorColumn = A.size();
+                    P.getLine(c.cursorRow)->endofLine(c.cursorColumn);
+                    break;
+                case 13:
+                   /* P.insertline(c.cursorRow + 1);
+                    c.cursorRow++;
+                    if (c.cursorColumn >= P.getLine(c.cursorRow)->size())
+                        c.cursorColumn = 0;*/
                     break;
                 case 224: 
                     sym = _getch();
                     if (sym == 83)
                         A.deleteAt(c.cursorColumn);
+                        //P.deleteAt(c.cursorRow, c.cursorColumn + 1);
                     break;
                 }
             }
 
-            gotoRowCol(c.cursorRow, 0);
-            A.clearLine(c.cursorRow, c.cursorColumn, 80/*A.MAX_LENGHT*/);
+            //gotoRowCol(c.cursorRow, 0);
+            //A.clearLine(c.cursorRow, c.cursorColumn, A.size()/*A.MAX_LENGHT*/);
   
-            gotoRowCol(c.cursorRow, 0);
-            A.printline();
+            //gotoRowCol(c.cursorRow, 0);
+            //A.printline();
+            system("cls");
+            P.printParagraph();
 
             
             gotoRowCol(c.cursorRow, c.cursorColumn);
