@@ -29,6 +29,13 @@ void line::clear() {
     length = 0; 
 }
 
+void line::clearLine(int row, int col, int lineLength) {
+    gotoRowCol(row, col);
+    for (int i = 0; i < lineLength; i++) 
+        cout << ' '; 
+    gotoRowCol(row, col);
+}
+
 int line::size() {
     int count = 0;
     for (int i = 0; Cs[i] != '\0'; i++)

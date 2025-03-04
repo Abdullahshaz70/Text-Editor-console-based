@@ -4,8 +4,8 @@
 class line {
     char* Cs;
     int length;
-    int MAX_LENGHT = 10;
 public:
+    int MAX_LENGHT = 10;
     line();
     ~line();
     line(const char* data);
@@ -17,6 +17,7 @@ public:
     void deleteFrom(int index);
     void printline();
     void clear();
+    void clearLine(int row, int col, int lineLength);
 
     int findNextWord(int index);           
     int findPrevWord(int index);          
