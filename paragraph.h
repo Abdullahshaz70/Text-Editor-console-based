@@ -12,10 +12,14 @@ public:
 	void insertAt(int lineIndex, int columnIndex, char sym);
 	void deleteAt(int lineIndex, int columnIndex);
 	void deletefrom(int lineIndex, int columnIndex);
+	int paragraphSize();
 
 	line* getLine(int index);
 	void addline();
-	void insertline(int index);
+
+	//void insertline(int index);
+
+	void insertline(int lineIndex, int columnIndex);
 	void printParagraph();
 };
 

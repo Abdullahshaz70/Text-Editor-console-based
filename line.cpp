@@ -118,6 +118,44 @@ void line::endofLine(int& index) {
     index = size();
 }
 
+line* line::splitRight(int index) {
+
+    if (index > size())
+        return new line();
+
+    line* newLine = new line();
+
+    newLine->length = size() - index;
+
+    newLine->Cs = new char [newLine->length + 1] {};
+
+    for (int i = 0; i < newLine->length; i++)
+        newLine->Cs[i] = Cs[i + index];
+
+    newLine->Cs[newLine->length] = '\0';
+
+    return newLine;
+
+}
+line* line::splitLeft(int index) {
+
+    if (index < 0)
+        return new line();
+
+    line* newLine = new line();
+
+    newLine->length = index;
+
+    newLine->Cs = new char [newLine->length + 1] {};
+
+    for (int i = 0; i < newLine->length; i++)
+        newLine->Cs[i] = Cs[i];
+
+    newLine->Cs[newLine->length] = '\0';
+
+    return newLine;
+
+}
 
 
 void line::stringcopy(const char* src) {

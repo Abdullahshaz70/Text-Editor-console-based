@@ -1,18 +1,35 @@
 #include "paragraph.h"
 
+using namespace std;
 
 void paragraph::addline() {
 	line* newLine = new line();
 	P.push_back(newLine);
 }
-void paragraph::insertline(int index) {
+//void paragraph::insertline(int index) {
+//
+//	if (index<0 or index>P.size())
+//		return;
+//
+//	line* newLine = new line();
+//	P.insert(P.begin() + index, newLine);
+//
+//}
 
-	if (index<0 or index>P.size())
+void paragraph::insertline(int lineIndex, int columnIndex) {
+	
+	if (columnIndex < 0 or columnIndex > P[lineIndex]->size() or lineIndex < 0 or lineIndex >= P.size())
 		return;
 
-	line* newLine = new line();
-	P.insert(P.begin() + index, newLine);
 
+	line* newLine = P[lineIndex]->splitLeft(columnIndex);
+	line* newLine1 = P[lineIndex]->splitRight(columnIndex);
+
+	delete P[lineIndex]; 
+	P[lineIndex] = newLine;
+
+	
+	P.insert(P.begin() + lineIndex + 1, newLine1);
 }
 void paragraph::printParagraph() {
 
@@ -23,6 +40,9 @@ void paragraph::printParagraph() {
 
 }
 
+int paragraph::paragraphSize() {
+	return P.size();
+}
 
 line* paragraph::getLine(int index){
 

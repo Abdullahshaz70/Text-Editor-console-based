@@ -23,6 +23,10 @@ public:
     int findPrevWord(int index);  
     void startofLine(int& index);
     void endofLine(int& index);
+
+    line* splitRight(int index);
+    line* splitLeft(int index);
+
     char getCharAt(int index);   
 
 
