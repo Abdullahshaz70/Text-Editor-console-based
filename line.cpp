@@ -195,3 +195,4 @@ void line::stringcopy(const char* src) {
     for (int i = 0; i <= length; i++)
         Cs[i] = src[i];
 }
+

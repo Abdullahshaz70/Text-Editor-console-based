@@ -1,14 +1,15 @@
 #pragma once
 #include"utility.h"
+#include<fstream>
 
 class line {
     char* Cs;
-
     char* copyLine;
-
     int length;
 public:
+    
     int MAX_LENGHT = 10;
+
     line();
     ~line();
     line(const char* data);
@@ -36,7 +37,13 @@ public:
 
     char getCharAt(int index);   
 
-    const char* getText() const {
-        return Cs; // Return the text as a C-style string
+
+   
+
+    const char* getContent() const {
+        return Cs;
     }
+    //const char* getText() const {
+    //    return Cs; // Return the text as a C-style string
+    //}
 };

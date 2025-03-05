@@ -13,14 +13,17 @@ paragraph P;
 void modeChanges(char sym) {
     if (sym == 'i')
         insertionMode = true, normalMode = false;
+
     else if (int(sym) == 27 and insertionMode)
         insertionMode = false, normalMode = true;
+
     else if (sym == ':' and !insertionMode)
         commandMode = true, normalMode = false;
+
     else if (int(sym) == 27 and commandMode)
         commandMode = false, normalMode = true;
-    else
-        normalMode = true;
+
+   
 
     gotoRowCol(50, 90);
     if (insertionMode)
@@ -62,15 +65,17 @@ void moveDown() {
 }
 
 
-
 int main() {
-    
+    ofstream rdr("output.txt");
+
     normalMode = true;
 
     P.addline();
+       
     P.printLine(cursorRow);
+
      while (true){
-        if (_kbhit()) {
+         if (_kbhit()) {
             char sym = _getch();
 
             modeChanges(sym);
@@ -220,16 +225,17 @@ int main() {
 
                 }
             }
-
-            //gotoRowCol( cursorRow, 0);
-            //A.clearLine( cursorRow,  cursorColumn, A.size()/*A.MAX_LENGHT*/);
-  
-            //gotoRowCol( cursorRow, 0);
-            //A.printline();
-
-           
+            else if (commandMode) {
+                switch (sym) {
+                case 'w':
+                    P.writeToFile("output.txt");
+                    break;
+                }
+            }
             system("cls");
+          
             P.printParagraph();
+
             gotoRowCol( cursorRow,  cursorColumn);
         }
      }

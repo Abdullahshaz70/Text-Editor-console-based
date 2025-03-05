@@ -2,6 +2,7 @@
 #include<iostream>
 #include<vector>
 #include"line.h"
+
 using namespace std;
 class paragraph
 {
@@ -18,7 +19,7 @@ public:
 	void addline();
 
 	//void insertline(int index);
-	void toggle(int lineIndx, int colunIndex);
+	
 	void insertline(int lineIndex, int columnIndex);
 
 
@@ -30,11 +31,24 @@ public:
 	void Toggle(int lineIndex, int index);
 
 	void printLine(int lineIndex);
-
 	int getlinesize(int lineIndx);
 
 
+	void writeToFile(const std::string& filename) const {
+		std::ofstream outputFile(filename);
 
+		if (!outputFile.is_open()) {
+			std::cerr << "Error: Could not open file " << filename << " for writing." << std::endl;
+			return;
+		}
+
+		for (const auto& line : P) {  // Range-based loop
+			outputFile << line->getContent() << std::endl;  // Using getter
+		}
+
+		outputFile.close();
+		std::cout << "Paragraph successfully written to " << filename << std::endl;
+	}
 
 
 

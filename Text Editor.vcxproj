@@ -24,6 +24,7 @@
     <ClCompile Include="line.cpp" />
     <ClCompile Include="mode.cpp" />
     <ClCompile Include="paragraph.cpp" />
+    <ClCompile Include="section.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -31,7 +32,11 @@
     <ClInclude Include="line.h" />
     <ClInclude Include="mode.h" />
     <ClInclude Include="paragraph.h" />
+    <ClInclude Include="section.h" />
     <ClInclude Include="utility.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="output.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

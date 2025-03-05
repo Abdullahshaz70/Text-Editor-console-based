@@ -99,3 +99,7 @@ void paragraph::deletefrom(int lineIndex, int columnIndex) {
 
 	P[lineIndex]->deleteFrom(columnIndex);
 }
+
+
+
+
