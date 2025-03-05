@@ -1,8 +1,11 @@
 #pragma once
-
+#include"utility.h"
 
 class line {
     char* Cs;
+
+    char* copyLine;
+
     int length;
 public:
     int MAX_LENGHT = 10;
@@ -23,11 +26,17 @@ public:
     int findPrevWord(int index);  
     void startofLine(int& index);
     void endofLine(int& index);
+    void toggle(int index);
+
+    void CopyLine();
+    void pasteLine();
 
     line* splitRight(int index);
     line* splitLeft(int index);
 
     char getCharAt(int index);   
 
-
+    const char* getText() const {
+        return Cs; // Return the text as a C-style string
+    }
 };

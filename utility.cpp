@@ -45,6 +45,13 @@ void color(int k)
 	SetConsoleTextAttribute(hConsole, k);
 }
 
+bool islower(char c) {
+	return c >= 'a' and c <= 'z';
+}
+
+bool isUpper(char c) {
+	return c >= 'A' and c <= 'Z';
+}
 
 int strsize(const char* data) {
 	int count = 0;
@@ -54,23 +61,23 @@ int strsize(const char* data) {
 	return count;
 }
 
-//char* stringcopy(const char* src) {
-//	if (src == nullptr) 
-//		return nullptr; 
-//	
-//
-//	int length = 0;
-//	while (src[length] != '\0') 
-//		length++;
-//	
-//
-//	char* dest = new char[length + 1];
-//	for (int i = 0; i <= length; i++) 
-//		dest[i] = src[i];
-//	
-//
-//	return dest; 
-//}
+char* stringcopy(const char* src) {
+	if (src == nullptr) 
+		return nullptr; 
+	
+
+	int length = 0;
+	while (src[length] != '\0') 
+		length++;
+	
+
+	char* dest = new char[length + 1];
+	for (int i = 0; i <= length; i++) 
+		dest[i] = src[i];
+	
+
+	return dest; 
+}
 
 
 bool isDelimiter(char c) {

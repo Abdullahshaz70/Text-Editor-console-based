@@ -17,18 +17,15 @@ line::line(const char* data) {
     stringcopy(data);
    
 }
-
 line::~line() {
     clear();
 }
-
 void line::clear() {
     delete[] Cs; 
     Cs = new char[1]; 
     Cs[0] = '\0'; 
     length = 0; 
 }
-
 void line::clearLine(int row, int col, int lineLength) {
     gotoRowCol(row, col);
     for (int i = 0; i < lineLength; i++) 
@@ -48,8 +45,6 @@ void line::printline() {
     for (int i = 0; i < size(); i++)
         cout<<Cs[i];
 }
-
-
 void line::insertAt(int index, char sym) {
     char* newChar = new char[length + 2];
 
@@ -110,6 +105,14 @@ char line::getCharAt(int index) {
         return '\0';
     return Cs[index];
 }
+void line::toggle(int index) {
+
+    if (islower(Cs[index])) 
+        Cs[index] = Cs[index] - 32;
+    else if(isupper(Cs[index]))
+        Cs[index] = Cs[index] + 32;
+
+}
 
 void line::startofLine(int& index) {
     index = 0;
@@ -157,6 +160,24 @@ line* line::splitLeft(int index) {
 
 }
 
+void line::CopyLine() {
+    if (copyLine)
+        delete[] copyLine;
+    copyLine = new char[size() + 1];
+    for (int i = 0; i < size(); i++)
+        copyLine[i] = Cs[i];
+    copyLine[size()] = '\0';
+}
+void line::pasteLine() {
+    if (!copyLine)
+        return;
+    delete[] Cs;
+    int newSize = strlen(copyLine);
+    Cs = new char[newSize + 1];
+    for (int i = 0; i < newSize; i++)
+        Cs[i] = copyLine[i];
+    Cs[newSize] = '\0';
+}
 
 void line::stringcopy(const char* src) {
     if (src == nullptr) {

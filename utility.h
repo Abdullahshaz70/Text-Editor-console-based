@@ -7,7 +7,9 @@ void color(int k);
 void hideConsoleCursor();
 void getRowColbyLeftClick(int& rpos, int& cpos);
 
+bool islower(char c);
+bool isUpper(char c);
 int strsize(const char* data);
-//char* stringcopy(const char* src);
+char* stringcopy(const char* src);
 bool isDelimiter(char c);
 

@@ -18,8 +18,26 @@ public:
 	void addline();
 
 	//void insertline(int index);
-
+	void toggle(int lineIndx, int colunIndex);
 	void insertline(int lineIndex, int columnIndex);
+
+
+	int findnextword(int lineIndex, int columnIndex);
+	int findprevword(int lineIndex, int columnIndex);
+
+	void startofline(int lineIndex, int& index);
+	void endofline(int lineIndex, int& index);
+	void Toggle(int lineIndex, int index);
+
+	void printLine(int lineIndex);
+
+	int getlinesize(int lineIndx);
+
+
+
+
+
+
 	void printParagraph();
 };
 
