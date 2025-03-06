@@ -6,7 +6,6 @@
 
 class section
 {
-
 	vector <paragraph*> S;
 	public:
 		

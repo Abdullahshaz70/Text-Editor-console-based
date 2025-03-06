@@ -74,6 +74,7 @@ int main() {
     normalMode = true;
 
     P.addline();
+    //P.addline();
        
     P.printLine(cursorRow);
 
@@ -90,7 +91,7 @@ int main() {
 
                          P.deleteAt(cursorRow, cursorColumn - 1);
                          cursorColumn--;
-
+                        
 
                          if (cursorColumn < 0)
                          {
@@ -101,6 +102,8 @@ int main() {
                              }
 
                          }
+                         gotoRowCol(cursorRow, cursorColumn);
+                         cout << " ";
                      }
                      break;
                  case 13:
@@ -142,40 +145,53 @@ int main() {
                  switch (sym) {
                  case 'h':
                      moveLeft();
+                
                      break;
                  case 'l':
                      moveRight();
+                     
                      break;
                  case 'j':
                      moveDown();
+                    
                      break;
                  case 'k':
                      moveUp();
+                    
                      break;
                  case 'w':
                      cursorColumn = P.findnextword(cursorRow, cursorColumn);
+                    
                      break;
                  case 'b':
                      cursorColumn = P.findprevword(cursorRow, cursorColumn);
+                    
                      break;
                  case 'd':
                      sym = _getch();
                      if (sym == 'd') {
+
+                         for (int i = 0; i < P.getlinesize(cursorRow); i++)
+                         {
+                             gotoRowCol(cursorRow, i);
+                             cout << " ";
+                         }
                          P.deletefrom(cursorRow, 0);
                          cursorColumn = 0;
-
                      }
-                     else
-
-
                          break;
                  case 'D':
+                     for (int i = cursorColumn; i < P.getlinesize(cursorRow); i++)
+                     {
+                         gotoRowCol(cursorRow, i);
+                         cout << " ";
+                     }
                      P.deletefrom(cursorRow, cursorColumn);
-
                      break;
                  case 'x':
                      P.deleteAt(cursorRow, cursorColumn);
-
+                     gotoRowCol(cursorRow, cursorColumn);
+                     cout << " ";
                      break;
                  case '0':
 
@@ -208,11 +224,10 @@ int main() {
                      P.insertline(cursorRow, cursorColumn);
                      cursorRow++;
 
-                     if (cursorColumn >= P.getlinesize(cursorRow)) {
-
+                     if (cursorColumn >= P.getlinesize(cursorRow))
                          cursorColumn = 0;
 
-                     }
+                     
                      break;
                  case 126:
                      P.Toggle(cursorRow, cursorColumn);
@@ -223,7 +238,8 @@ int main() {
                      sym = _getch();
                      if (sym == 83)
                          P.deleteAt(cursorRow, cursorColumn);
-
+                     gotoRowCol(cursorRow, cursorColumn);
+                     cout << " ";
                      break;
 
                  }
@@ -274,11 +290,11 @@ int main() {
                          system("pause");
                          break;
                      }
-                     case 'n': // Move to next occurrence
+                     case 'n': 
                          P.moveToNextOccurrence();
                          system("pause");
                          break;
-                     case 'N': // Move to previous occurrence
+                     case 'N': 
                          P.moveToPreviousOccurrence();
                          system("pause");
                          break;
@@ -289,11 +305,16 @@ int main() {
                  }
              }
          
-            system("cls");
-          
-            P.printParagraph();
+
+            gotoRowCol( cursorRow,  0);
+            //P.printParagraph();
+
+            for (int i = 0; i < P.getlinesize(cursorRow); i++)
+                cout << P.getLine(cursorRow)->getCharAt(i);
 
             gotoRowCol( cursorRow,  cursorColumn);
+          
+
          }
      }
 
