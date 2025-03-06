@@ -32,7 +32,6 @@ void line::clearLine(int row, int col, int lineLength) {
         cout << ' '; 
     gotoRowCol(row, col);
 }
-
 int line::size() {
     
     int count = 0;
@@ -40,7 +39,6 @@ int line::size() {
         count++;
     return count;
 }
-
 void line::printline() {
     for (int i = 0; i < size(); i++)
         cout<<Cs[i];
@@ -113,14 +111,12 @@ void line::toggle(int index) {
         Cs[index] = Cs[index] + 32;
 
 }
-
 void line::startofLine(int& index) {
     index = 0;
 }
 void line::endofLine(int& index) {
     index = size();
 }
-
 line* line::splitRight(int index) {
 
     if (index > size())
@@ -160,39 +156,30 @@ line* line::splitLeft(int index) {
 
 }
 
-void line::CopyLine() {
-    if (copyLine)
-        delete[] copyLine;
-    copyLine = new char[size() + 1];
-    for (int i = 0; i < size(); i++)
-        copyLine[i] = Cs[i];
-    copyLine[size()] = '\0';
-}
-void line::pasteLine() {
-    if (!copyLine)
-        return;
+
+
+void line::indent() {
+    const int tabSize = 4;  
+    char* newCs = new char[length + tabSize + 1] {};
+
+  
+    for (int i = 0; i < tabSize; i++)
+        newCs[i] = ' ';
+
+  
+    for (int i = 0; i < length; i++)
+        newCs[tabSize + i] = Cs[i];
+
+    newCs[length + tabSize] = '\0'; 
+
+   
     delete[] Cs;
-    int newSize = strlen(copyLine);
-    Cs = new char[newSize + 1];
-    for (int i = 0; i < newSize; i++)
-        Cs[i] = copyLine[i];
-    Cs[newSize] = '\0';
+    Cs = newCs;
+
+    length += tabSize;
 }
 
-void line::stringcopy(const char* src) {
-    if (src == nullptr) {
-        Cs = nullptr;
-        return;
-    }
 
-    int length = 0;
-    while (src[length] != '\0')
-        length++;
-
-    delete[] Cs; 
-    Cs = new char[length + 1]; 
-
-    for (int i = 0; i <= length; i++)
-        Cs[i] = src[i];
+const char* line:: getContent() const {
+    return Cs;
 }
-

@@ -5,20 +5,20 @@ using namespace std;
 void paragraph::addline() {
 	line* newLine = new line();
 	P.push_back(newLine);
+
 }
-//void paragraph::insertline(int index) {
-//
-//	if (index<0 or index>P.size())
-//		return;
-//
-//	line* newLine = new line();
-//	P.insert(P.begin() + index, newLine);
-//
-//}
+
+void paragraph::addline(const char* c) {
+	//line* newLine = new line(c);
+	P.push_back(new line(c));
+}
+
 
 void paragraph::insertline(int lineIndex, int columnIndex) {
 	
-	if (columnIndex < 0 or columnIndex > P[lineIndex]->size() or lineIndex < 0 or lineIndex >= P.size())
+	if (lineIndex < 0 or lineIndex >= P.size())
+		return;
+	if (columnIndex < 0 or columnIndex > P[lineIndex]->size() )
 		return;
 
 
@@ -100,6 +100,61 @@ void paragraph::deletefrom(int lineIndex, int columnIndex) {
 	P[lineIndex]->deleteFrom(columnIndex);
 }
 
+void paragraph::CopyLine(int lineindex) {
+	
+	line* A = getLine(lineindex);
 
+	copyLine = new char [A->size() + 1] {};
 
+	for (int i = 0; i < A->size(); i++)
+		copyLine[i] = A->getCharAt(i);
+
+	copyLine[A->size() + 1] = '\0';
+
+}
+void paragraph::pasteLine(int lineindex) {
+	if (lineindex < 0 or lineindex > P.size())
+		return;
+	(P.insert(P.begin() + lineindex, new line(copyLine)));
+	
+	/*for (int i = 0; i < 5; i++)
+		cout << copyLine[i] ;*/
+
+}
+
+void paragraph::writeToFile(const char* filename) const {
+	ofstream outputFile(filename);
+	if (!outputFile.is_open())
+		return;
+
+	for (int i = 0; i < P.size(); ++i) {
+		const char* content = P[i]->getContent();
+
+		for (int j = 0; content[j] != '\0'; ++j) 
+			outputFile.put(content[j] == ' ' ? '*' : content[j]);
+		
+
+		outputFile.put('\n'); 
+	}
+
+	outputFile.close();
+}
+void paragraph::readfromfile(const char* filename)const {
+
+}
+//
+//void paragraph::writeToFile(const std::string& filename) const {
+//	ofstream outputFile(filename);
+//
+//	if (!outputFile.is_open())
+//		return;
+//	
+//	/*for (const auto& line : P) 
+//		outputFile << line->getContent() <<endl; */ 
+//	
+//
+//	
+//	outputFile.close();
+//
+//}
 

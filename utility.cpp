@@ -75,8 +75,26 @@ char* stringcopy(const char* src) {
 	for (int i = 0; i <= length; i++) 
 		dest[i] = src[i];
 	
+	src = nullptr;
 
 	return dest; 
+}
+
+void stringcopy(char* Cs , char* src) {
+	if (src == nullptr) {
+		Cs = nullptr;
+		return;
+	}
+
+	int length = 0;
+	while (src[length] != '\0')
+		length++;
+
+	delete[] Cs;
+	Cs = new char[length + 1];
+
+	for (int i = 0; i <= length; i++)
+		Cs[i] = src[i];
 }
 
 
@@ -87,4 +105,21 @@ bool isDelimiter(char c) {
 		c == '-' or c == '_');
 }
 
+bool wordFinder(const char* S1, const char* S2) {
+	if (!S1 or !S2 or *S2 == '\0') 
+		return false; 
 
+	for (int i = 0; S1[i] != '\0'; ++i) {
+		int j = 0;
+
+
+		while (S1[i + j] != '\0' and S2[j] != '\0' and S1[i + j] == S2[j]) 
+			j++;
+		
+
+		if (S2[j] == '\0') 
+			return true; 
+	}
+
+	return false; 
+}

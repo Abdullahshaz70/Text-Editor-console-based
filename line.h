@@ -4,18 +4,18 @@
 
 class line {
     char* Cs;
-    char* copyLine;
+
     int length;
 public:
     
-    int MAX_LENGHT = 10;
+    int MAX_LENGHT = 20;
 
     line();
-    ~line();
     line(const char* data);
+    ~line();
     int size();
 
-    void stringcopy(const char* src);
+    
     void insertAt(int index, char sym);    
     void deleteAt(int index);              
     void deleteFrom(int index);
@@ -28,9 +28,8 @@ public:
     void startofLine(int& index);
     void endofLine(int& index);
     void toggle(int index);
-
-    void CopyLine();
-    void pasteLine();
+    void indent();
+ 
 
     line* splitRight(int index);
     line* splitLeft(int index);
@@ -38,12 +37,26 @@ public:
     char getCharAt(int index);   
 
 
-   
+    const char* getContent() const;
+    
+  
+ void stringcopy(const char* src) {
+        if (src == nullptr)
+            
 
-    const char* getContent() const {
-        return Cs;
+
+        int length = 0;
+        while (src[length] != '\0')
+            length++;
+
+
+        char* dest = new char[length + 1];
+        for (int i = 0; i <= length; i++)
+            dest[i] = src[i];
+
+        src = nullptr;
+
+        Cs = dest;
+        dest = nullptr;
     }
-    //const char* getText() const {
-    //    return Cs; // Return the text as a C-style string
-    //}
 };

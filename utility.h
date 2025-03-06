@@ -12,4 +12,7 @@ bool isUpper(char c);
 int strsize(const char* data);
 char* stringcopy(const char* src);
 bool isDelimiter(char c);
+void stringcopy(char* Cs, char* src);
+
+bool wordFinder(char const* S1, char const* S2);
 
