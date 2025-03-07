@@ -12,6 +12,33 @@ void section::insertAt(int lineIndex, int columnIndex, char sym) {
     
 }
 
+//void section::insertAt(int lineIndex, int columnIndex, char sym) {
+//    if (S[getParagraphNumber(lineIndex)-1] == nullptr) return;
+//
+//   
+//    while (S.size() <= getParagraphNumber(lineIndex)-1) {
+//        S.push_back(new paragraph());
+//    }
+//
+//    
+//    if (sym == '\r') {
+//        if (S[getParagraphNumber(lineIndex) - 1]->isLineEmpty(lineIndex)) {
+//          
+//            S.insert(S.begin() + getParagraphNumber(lineIndex) - 1 + 1, new paragraph());
+//        }
+//        else {
+//     
+//            S[getParagraphNumber(lineIndex) - 1]->insertline(lineIndex, columnIndex);
+//        }
+//    }
+//    else {
+//      
+//        S[getParagraphNumber(lineIndex) - 1]->insertAt(lineIndex, columnIndex, sym);
+//    }
+//}
+
+
+
 int  section::getParagraphNumber(int cursorRow) {
 
     if (S.empty()) {
@@ -82,7 +109,7 @@ void section::toggle(int lineindex , int index) {
 }
 
 void section::insertparagraph(int lineIndex, int columnIndex) {
-
+    
     S[getParagraphNumber(lineIndex) - 1]->insertline(lineIndex, columnIndex);
 
 }

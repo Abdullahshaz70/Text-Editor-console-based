@@ -47,7 +47,20 @@ public:
 	void printParagraph();
 
 
+    bool isLineEmpty(int lineIndex) {
+        // Check for out-of-bounds access
+        if (lineIndex < 0 || lineIndex >= P.size()) {
+            return true;
+        }
 
+        // Ensure P[lineIndex] is not null before accessing it
+        if (P[lineIndex] == nullptr) {
+            return true;
+        }
+
+        // Check if the line is empty
+        return P[lineIndex]->isEmpty();
+    }
 
 
 

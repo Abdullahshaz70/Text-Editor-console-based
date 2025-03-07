@@ -48,7 +48,6 @@ void color(int k)
 bool islower(char c) {
 	return c >= 'a' and c <= 'z';
 }
-
 bool isUpper(char c) {
 	return c >= 'A' and c <= 'Z';
 }

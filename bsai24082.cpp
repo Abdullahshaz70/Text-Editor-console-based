@@ -7,7 +7,7 @@
 #include"section.h"
 
 using namespace std;
-#define MAX_LENGHT_LINE 20
+#define MAX_LENGHT_LINE 90
 int cursorRow = 0, cursorColumn = 0;
 //line A;
 paragraph P;
@@ -72,6 +72,9 @@ void moveDown() {
     gotoRowCol(cursorRow, cursorColumn);
 }
 void enter_Insertion() {
+
+    //cout << S.sectionSize() << endl;
+
     for (int i = cursorColumn; i < S.getlineSize(cursorRow); i++) {
         gotoRowCol(cursorRow, i);
         cout << " ";
@@ -119,13 +122,10 @@ int main() {
                          gotoRowCol(cursorRow, cursorColumn);
                          cout << " ";
                      }
-
                      break;
                  case 13:
                      enter_Insertion();
                      break;
-
-
                  case -32:
                      sym = _getch();
                      if (sym == 75)
@@ -158,6 +158,10 @@ int main() {
                      }
 
                      S.insertAt(cursorRow, cursorColumn, sym);
+
+                     if (sym == '\r')
+                         cursorRow++;
+
                      cursorColumn++;
                      break;
                  }
@@ -299,8 +303,12 @@ int main() {
                          if (sym == '!')
                              return 0;
 
-                         else 
+                         else {
+                             system("cls");
+                             int doubleEnterCount = S.countDoubleEnter();
+                             cout << "Double enters detected: " << doubleEnterCount << endl;
                              return 0;
+                         }
                          
 
                          break;

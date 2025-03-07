@@ -159,6 +159,19 @@ line* line::splitLeft(int index) {
 
 
 
+int line::countDoubleEnter(line* lines[], int size) {
+    int count = 0;
+
+    for (int i = 0; i < size - 1; i++) {
+        if (lines[i]->isEmpty() && lines[i + 1]->isEmpty()) {
+            count++; 
+        }
+    }
+
+    return count;
+}
+
+
 void line::indent() {
     const int tabSize = 4;  
     char* newCs = new char[length + tabSize + 1] {};

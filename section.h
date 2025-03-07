@@ -36,6 +36,32 @@ class section
 
 		void printSection(int lineIndex);
      
-		
+
+		int countDoubleEnter() {
+			int count = 0;
+
+			for (int p = 0; p < S.size(); p++) { 
+				paragraph* para = S[p];
+
+				size_t i = 0;
+				while (i < para->paragraphSize()) { 
+					if (para->isLineEmpty(i)) {
+						count++;  
+						while (i < para->paragraphSize() && para->isLineEmpty(i)) {
+							i++;
+						}
+					}
+					else {
+						i++; 
+					}
+				}
+			}
+
+			return count; 
+		}
+
+		int sectionSize() {
+			return S.size();
+		}
 };
 

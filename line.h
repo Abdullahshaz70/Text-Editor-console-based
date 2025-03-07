@@ -67,5 +67,10 @@ public:
 
      return count;
  }
+ bool isEmpty() {
+     return Cs == nullptr or Cs[0] == '\0';
+ }
 
+
+ static int countDoubleEnter(line* lines[], int size);
 };
