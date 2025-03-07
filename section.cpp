@@ -5,12 +5,13 @@
 void section::addparagraph() {
     S.push_back(new paragraph());
 }
-void section::insertAt(int paragraphIndex, int lineIndex, int columnIndex, char sym) {
 
- 
-    S[paragraphIndex - 1]->insertAt(lineIndex, columnIndex, sym);
+void section::insertAt(int lineIndex, int columnIndex, char sym) {
+
+    S[getParagraphNumber(lineIndex) - 1]->insertAt(lineIndex, columnIndex, sym);
     
 }
+
 int  section::getParagraphNumber(int cursorRow) {
 
     if (S.empty()) {
@@ -31,9 +32,9 @@ int  section::getParagraphNumber(int cursorRow) {
 
     return -1;
 }
-void section::deleteAt(int paragraphIndex, int lineIndex, int columnIndex) {
+void section::deleteAt(int lineIndex, int columnIndex) {
 
-    S[paragraphIndex-1]->deleteAt(lineIndex, columnIndex);
+    S[getParagraphNumber(lineIndex) - 1]->deleteAt(lineIndex, columnIndex);
 
 }
 void  section::printSection(int lineIndex) {
@@ -43,12 +44,45 @@ void  section::printSection(int lineIndex) {
 
 }
 
-int section::getlineSize(int paragraphIndex, int lineIndex) {
-    return S[paragraphIndex - 1]->getlinesize(lineIndex);
+int section::getlineSize( int lineIndex) {
+    return  S[getParagraphNumber(lineIndex) - 1]->getlinesize(lineIndex);
+}
+int section::getParagraphSize(int lineindex) {
+
+    return S[getParagraphNumber(lineindex) - 1]->paragraphSize();
+
 }
 
-void section::insertparagraph(int paragraphIndex, int lineIndex, int columnIndex) {
+int section::findNextWord(int lineIndex, int columnIndex) {
+  return  S[getParagraphNumber(lineIndex) - 1]->findnextword(lineIndex, columnIndex);
+}
+int section::findPrevWord(int lineIndex, int columnIndex) {
+   return  S[getParagraphNumber(lineIndex) - 1]->findprevword(lineIndex, columnIndex);
+}
 
-    S[paragraphIndex - 1]->insertline(lineIndex, columnIndex);
+void section::deleteFrom(int lineIndex, int columnIndex) {
+    S[getParagraphNumber(lineIndex) - 1]->deletefrom(lineIndex, columnIndex);
+}
+void section::startOfLine(int lineIndex, int& columnIndex) {
+    S[getParagraphNumber(lineIndex) - 1]->startofline(lineIndex, columnIndex);
+}
+void section::endOfLine(int lineIndex, int& columnIndex) {
+    S[getParagraphNumber(lineIndex) - 1]->endofline(lineIndex, columnIndex);
+}
+
+void section::copyLine(int lineIndex) {
+    S[getParagraphNumber(lineIndex) - 1]->CopyLine(lineIndex);
+}
+void section::pasteLine(int lineIndex) {
+    S[getParagraphNumber(lineIndex) - 1]->pasteLine(lineIndex);
+}
+
+void section::toggle(int lineindex , int index) {
+    S[getParagraphSize(lineindex) - 1]->Toggle(lineindex, index);
+}
+
+void section::insertparagraph(int lineIndex, int columnIndex) {
+
+    S[getParagraphNumber(lineIndex) - 1]->insertline(lineIndex, columnIndex);
 
 }

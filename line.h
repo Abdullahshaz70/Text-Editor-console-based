@@ -59,4 +59,13 @@ public:
         Cs = dest;
         dest = nullptr;
     }
+
+ int strsize(const char* data) {
+     int count = 0;
+     for (int i = 0; data[i] != '\0'; i++)
+         count++;
+
+     return count;
+ }
+
 };

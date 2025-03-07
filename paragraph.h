@@ -11,6 +11,7 @@ class paragraph
     char* copyLine;
 
     int lastFoundIndex = -1;  
+
     char* lastPattern = new char[100] {};
 
     

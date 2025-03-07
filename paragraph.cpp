@@ -84,6 +84,7 @@ line* paragraph::getLine(int index){
 
 	if (index<0 or index>P.size())
 		return nullptr;
+
 	return P[index];
 }
 void paragraph::insertAt(int lineIndex, int columnIndex, char sym) {
@@ -104,6 +105,7 @@ void paragraph::deletefrom(int lineIndex, int columnIndex) {
 
 	P[lineIndex]->deleteFrom(columnIndex);
 }
+
 void paragraph::CopyLine(int lineindex) {
 	
 	line* A = getLine(lineindex);
@@ -121,8 +123,6 @@ void paragraph::pasteLine(int lineindex) {
 		return;
 	(P.insert(P.begin() + lineindex, new line(copyLine)));
 	
-
-
 }
 
 

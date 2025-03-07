@@ -40,45 +40,58 @@ void moveUp() {
     
     if (cursorRow != 0)
         cursorRow--;
-
+    gotoRowCol(cursorRow, cursorColumn);
 }
 void moveLeft() {
 
     if (cursorRow != 0 and cursorColumn == 0) {
         cursorRow--;
-        cursorColumn = P.getLine(cursorRow)->size();
+        cursorColumn = S.getlineSize(cursorRow);
     }
 
     if (cursorColumn > 0)
         cursorColumn--;
+
+    gotoRowCol(cursorRow, cursorColumn);
 }
 void moveRight() {
-    if (cursorColumn < P.getLine(cursorRow)->size())
+    if (cursorColumn < S.getlineSize(cursorRow))
         cursorColumn++;
 
-    if (cursorRow != P.paragraphSize()-1 and cursorColumn == P.getLine(cursorRow)->size()) {
+    if (cursorRow != S.getParagraphSize(cursorRow)-1 and cursorColumn == S.getlineSize(cursorRow)) {
         cursorRow++;
         cursorColumn =0;
     }
+    gotoRowCol(cursorRow, cursorColumn);
 }
 void moveDown() {
-    if (cursorRow < P.paragraphSize() - 1 and P.getlinesize(cursorRow+1)>0) {
+    if (cursorRow < S.getParagraphSize(cursorRow) - 1 and S.getlineSize(cursorRow+1)>0) {
         cursorRow++;
-        cursorColumn = P.getlinesize(cursorRow);
+        cursorColumn = S.getlineSize(cursorRow);
     }
+    gotoRowCol(cursorRow, cursorColumn);
 }
+void enter_Insertion() {
+    for (int i = cursorColumn; i < S.getlineSize(cursorRow); i++) {
+        gotoRowCol(cursorRow, i);
+        cout << " ";
 
+    }
+
+    S.insertparagraph(cursorRow, cursorColumn);
+    cursorRow++;
+    if (cursorColumn >= S.getlineSize(cursorRow))
+        cursorColumn = 0;
+
+    gotoRowCol(cursorRow, cursorColumn);
+}
 
 int main() {
     
     normalMode = true;
 
-    //P.addline();
-   
     S.addparagraph();
    
-    
-    //P.printLine(cursorRow);
      while (true){
          if (_kbhit()) {
              char sym = _getch();
@@ -91,17 +104,15 @@ int main() {
                  case 8:
                      if (cursorRow != 0 or cursorColumn != 0) {
 
-                         //P.deleteAt(cursorRow, cursorColumn - 1);
-                         S.deleteAt(S.getParagraphNumber(cursorRow),cursorRow, cursorColumn - 1);
+                        
+                         S.deleteAt(cursorRow, cursorColumn - 1);
                          cursorColumn--;
                         
                          if (cursorColumn < 0)
                          {
                              if (cursorRow != 0) {
                                  cursorRow--;
-                                 cursorColumn = S.getlineSize(S.getParagraphNumber(cursorRow), cursorRow);
-                                 //cursorColumn = P.getlinesize(cursorRow);
-
+                                 cursorColumn = S.getlineSize(cursorRow);
                              }
 
                          }
@@ -111,17 +122,7 @@ int main() {
 
                      break;
                  case 13:
-
-                     
-                     //P.insertline(cursorRow, cursorColumn);
-                     S.insertparagraph(S.getParagraphNumber(cursorRow), cursorRow, cursorColumn);
-                     cursorRow++;
-                     //if (cursorColumn >= P.getlinesize(cursorRow))
-                     if(cursorColumn >= S.getlineSize(S.getParagraphNumber(cursorRow),cursorRow))
-                         cursorColumn = 0;
-
-                     
-
+                     enter_Insertion();
                      break;
 
 
@@ -137,21 +138,26 @@ int main() {
                          moveUp();
 
                      break;
+                 case 224: 
+                         sym = _getch();
+                         switch (sym) {
+                         case 75: moveLeft(); break;  
+                         case 77: moveRight(); break; 
+                         case 72: moveUp(); break;   
+                         case 80: moveDown(); break;  
+                        
+                         }
+                         break;
 
                  default:
 
                      if (cursorColumn >= MAX_LENGHT_LINE) {
-                         //P.insertline(cursorRow, cursorColumn);
-                         S.insertparagraph(S.getParagraphNumber(cursorRow), cursorRow, cursorColumn);
+                         S.insertparagraph( cursorRow, cursorColumn);
                          cursorRow++, cursorColumn = 0;
 
                      }
 
-                     //lastEnterPressed = false;
-
-                     
-                     S.insertAt(S.getParagraphNumber(cursorRow), cursorRow, cursorColumn, sym);
-                     //P.insertAt(cursorRow, cursorColumn, sym);
+                     S.insertAt(cursorRow, cursorColumn, sym);
                      cursorColumn++;
                      break;
                  }
@@ -160,7 +166,6 @@ int main() {
                  switch (sym) {
                  case 'h':
                      moveLeft();
-                 
                      break;
                  case 'l':
                      moveRight();     
@@ -172,53 +177,57 @@ int main() {
                      moveUp();
                      break;
                  case 'w':
-                     cursorColumn = P.findnextword(cursorRow, cursorColumn);
+                     cursorColumn = S.findNextWord(cursorRow, cursorColumn);
                    
                      break;
                  case 'b':
-                     cursorColumn = P.findprevword(cursorRow, cursorColumn);
+                     cursorColumn = S.findPrevWord(cursorRow, cursorColumn);
                     
                      break;
                  case 'd':
                      sym = _getch();
                      if (sym == 'd') {
 
-                         for (int i = 0; i < P.getlinesize(cursorRow); i++)
+                         for (int i = 0; i < S.getlineSize(cursorRow); i++)
                          {
                              gotoRowCol(cursorRow, i);
                              cout << " ";
                          }
-                         P.deletefrom(cursorRow, 0);
+                         S.deleteFrom(cursorRow, 0);
                          cursorColumn = 0;
                      }
                          break;
                  case 'D':
-                     for (int i = cursorColumn; i < P.getlinesize(cursorRow); i++)
+                     for (int i = cursorColumn; i < S.getlineSize(cursorRow); i++)
                      {
                          gotoRowCol(cursorRow, i);
                          cout << " ";
                      }
-                     P.deletefrom(cursorRow, cursorColumn);
+                     S.deleteFrom(cursorRow, cursorColumn);
                      break;
                  case 'x':
-                     P.deleteAt(cursorRow, cursorColumn);
+                     S.deleteAt(cursorRow, cursorColumn);
                      gotoRowCol(cursorRow, cursorColumn);
                      cout << " ";
                      break;
                  case '0':
-
-                     P.startofline(cursorRow, cursorColumn);
+                     S.startOfLine(cursorRow, cursorColumn);
+                     gotoRowCol(cursorRow, cursorColumn);
                      break;
                  case '$':
-
-                     P.endofline(cursorRow, cursorColumn);
+                     S.endOfLine(cursorRow, cursorColumn);
+                     gotoRowCol(cursorRow, cursorColumn);
                      break;
+                     {
+
                  case'y':
                      sym = _getch();
                      if (sym == 'y')
-                         P.CopyLine(cursorRow);
+                         S.copyLine(cursorRow);
+                         //P.CopyLine(cursorRow);
+
                      else
-                         P.printParagraph();
+                         S.printSection(cursorRow);
                      break;
                  case'P':
 
@@ -233,33 +242,31 @@ int main() {
                      break;
 
                  case 'p':
-                     P.addline();
+                     //P.addline();
+                     S.addparagraph();
                      cursorRow++;
                      gotoRowCol(cursorRow, cursorColumn);
-                     P.pasteLine(cursorRow);
+                     //P.pasteLine(cursorRow);
+                     S.pasteLine(cursorRow);
                      break;
+                     }
                  case 13:
-
-                     P.insertline(cursorRow, cursorColumn);
-                     cursorRow++;
-
-                     if (cursorColumn >= P.getlinesize(cursorRow))
-                         cursorColumn = 0;
-
-                    
-
+                     enter_Insertion();
                      break;
                  case 126:
-                     P.Toggle(cursorRow, cursorColumn);
+                     S.toggle(cursorRow, cursorColumn);
 
                      break;
 
                  case -32: //delete
                      sym = _getch();
                      if (sym == 83)
-                         P.deleteAt(cursorRow, cursorColumn);
-                     gotoRowCol(cursorRow, cursorColumn);
+                         S.deleteAt(cursorRow, cursorColumn+1);
+                     gotoRowCol(cursorRow, cursorColumn+1);
                      cout << " ";
+                     gotoRowCol(cursorRow, S.getlineSize(cursorRow));
+                     cout << " ";
+
                      break;
 
                  }
@@ -330,9 +337,6 @@ int main() {
             gotoRowCol( cursorRow,  0);
             
             S.printSection(cursorRow);
-            /*for (int i = 0; i < P.getlinesize(cursorRow); i++)
-                cout << P.getLine(cursorRow)->getCharAt(i);*/
-
             gotoRowCol( cursorRow,  cursorColumn);
           
 
@@ -344,14 +348,14 @@ int main() {
     return 0;
 }
 
-int main6786() {
+int main43() {
 
-    //P.addline("haha");
-    //P.addline("haha");
-    //P.addline("haha");
-    //P.addline("haha");
+    P.addline("haha");
+    P.printParagraph();
+    P.CopyLine(0);
+    P.pasteLine(1);
    
-    //P.printParagraph();
+    P.printParagraph();
 
 
     //S.addParagraph("heelo");

@@ -11,6 +11,7 @@ line::line() {
     Cs[0] = '\0';
     length = 0;
 }
+
 line::line(const char* data) {
 
     Cs = new char[strsize(data) + 1] {};

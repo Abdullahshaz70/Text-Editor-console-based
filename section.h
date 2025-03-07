@@ -15,14 +15,24 @@ class section
 
 		void addparagraph();
 
+		int getParagraphSize(int lineindex);
 
-
-		void insertAt(int paragraphIndex, int lineIndex, int columnIndex, char sym);
+		void insertAt(int lineIndex, int columnIndex, char sym);
         int getParagraphNumber(int cursorRow);
-		void deleteAt(int paragraphIndex, int lineIndex, int columnIndex);
+		void deleteAt(int lineIndex, int columnIndex);
 
-		void insertparagraph(int paragraphIndex, int lineIndex, int columnIndex);
-		int getlineSize(int paragraphIndex, int lineIndex);
+		void insertparagraph( int lineIndex, int columnIndex);
+		int getlineSize( int lineIndex);
+
+		void toggle(int lineindex, int index);
+		void copyLine(int lineIndex);
+		void pasteLine(int lineIndex);
+
+		int findNextWord(int lineIndex, int columnIndex);
+		int findPrevWord(int lineIndex, int columnIndex);
+		void deleteFrom(int lineIndex, int columnIndex);
+		void startOfLine(int lineIndex, int& columnIndex);
+		void endOfLine(int lineIndex, int& columnIndex);
 
 		void printSection(int lineIndex);
      
