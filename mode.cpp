@@ -3,4 +3,4 @@
 bool normalMode = false;
 bool insertionMode = false;
 bool commandMode = false;
-
+bool lastEnterPressed = false;

@@ -4,12 +4,14 @@
 #include <conio.h>
 #include "mode.h"
 #include "paragraph.h"
+#include"section.h"
+
 using namespace std;
-
+#define MAX_LENGHT_LINE 20
 int cursorRow = 0, cursorColumn = 0;
-line A;
+//line A;
 paragraph P;
-
+section S;
 void modeChanges(char sym) {
     if (sym == 'i')
         insertionMode = true, normalMode = false;
@@ -69,19 +71,19 @@ void moveDown() {
 
 int main() {
     
-    ofstream rdr("output.txt");
-
     normalMode = true;
 
-    P.addline();
     //P.addline();
-       
-    P.printLine(cursorRow);
-
+   
+    S.addparagraph();
+   
+    
+    //P.printLine(cursorRow);
      while (true){
          if (_kbhit()) {
              char sym = _getch();
 
+            
              modeChanges(sym);
 
              if (insertionMode) {
@@ -89,15 +91,16 @@ int main() {
                  case 8:
                      if (cursorRow != 0 or cursorColumn != 0) {
 
-                         P.deleteAt(cursorRow, cursorColumn - 1);
+                         //P.deleteAt(cursorRow, cursorColumn - 1);
+                         S.deleteAt(S.getParagraphNumber(cursorRow),cursorRow, cursorColumn - 1);
                          cursorColumn--;
                         
-
                          if (cursorColumn < 0)
                          {
                              if (cursorRow != 0) {
                                  cursorRow--;
-                                 cursorColumn = P.getlinesize(cursorRow);
+                                 cursorColumn = S.getlineSize(S.getParagraphNumber(cursorRow), cursorRow);
+                                 //cursorColumn = P.getlinesize(cursorRow);
 
                              }
 
@@ -105,15 +108,22 @@ int main() {
                          gotoRowCol(cursorRow, cursorColumn);
                          cout << " ";
                      }
+
                      break;
                  case 13:
-                     P.insertline(cursorRow, cursorColumn);
-                     cursorRow++;
 
-                     if (cursorColumn >= P.getlinesize(cursorRow))
+                     
+                     //P.insertline(cursorRow, cursorColumn);
+                     S.insertparagraph(S.getParagraphNumber(cursorRow), cursorRow, cursorColumn);
+                     cursorRow++;
+                     //if (cursorColumn >= P.getlinesize(cursorRow))
+                     if(cursorColumn >= S.getlineSize(S.getParagraphNumber(cursorRow),cursorRow))
                          cursorColumn = 0;
 
+                     
+
                      break;
+
 
                  case -32:
                      sym = _getch();
@@ -130,14 +140,19 @@ int main() {
 
                  default:
 
-                     P.insertAt(cursorRow, cursorColumn, sym);
-                     cursorColumn++;
-
-                     if (cursorColumn >= A.MAX_LENGHT) {
-                         P.insertline(cursorRow, cursorColumn);
+                     if (cursorColumn >= MAX_LENGHT_LINE) {
+                         //P.insertline(cursorRow, cursorColumn);
+                         S.insertparagraph(S.getParagraphNumber(cursorRow), cursorRow, cursorColumn);
                          cursorRow++, cursorColumn = 0;
 
                      }
+
+                     //lastEnterPressed = false;
+
+                     
+                     S.insertAt(S.getParagraphNumber(cursorRow), cursorRow, cursorColumn, sym);
+                     //P.insertAt(cursorRow, cursorColumn, sym);
+                     cursorColumn++;
                      break;
                  }
              }
@@ -145,23 +160,20 @@ int main() {
                  switch (sym) {
                  case 'h':
                      moveLeft();
-                
+                 
                      break;
                  case 'l':
-                     moveRight();
-                     
+                     moveRight();     
                      break;
                  case 'j':
-                     moveDown();
-                    
+                     moveDown();                    
                      break;
                  case 'k':
                      moveUp();
-                    
                      break;
                  case 'w':
                      cursorColumn = P.findnextword(cursorRow, cursorColumn);
-                    
+                   
                      break;
                  case 'b':
                      cursorColumn = P.findprevword(cursorRow, cursorColumn);
@@ -209,14 +221,21 @@ int main() {
                          P.printParagraph();
                      break;
                  case'P':
-                     P.insertline(cursorRow - 1, 0);
-                     cursorRow--;
-                     P.pasteLine(cursorRow);
 
+                     P.insertline(cursorRow, 0);
+                     P.pasteLine(cursorRow);
+                     gotoRowCol(cursorRow, 0);
+                     for (int i = 0; i < P.getlinesize(cursorRow); i++) {
+                         cout << P.getLine(cursorRow)->getCharAt(i);
+                     }
+                     cursorColumn = 0;
+                     gotoRowCol(cursorRow, cursorColumn);
                      break;
+
                  case 'p':
                      P.addline();
                      cursorRow++;
+                     gotoRowCol(cursorRow, cursorColumn);
                      P.pasteLine(cursorRow);
                      break;
                  case 13:
@@ -227,7 +246,8 @@ int main() {
                      if (cursorColumn >= P.getlinesize(cursorRow))
                          cursorColumn = 0;
 
-                     
+                    
+
                      break;
                  case 126:
                      P.Toggle(cursorRow, cursorColumn);
@@ -259,11 +279,11 @@ int main() {
                          sym = _getch();
                          if (sym == 'q') {
 
-                             P.writeToFile("output.txt");
+                             P.writeToFile("Text.txt");
                              return 0;
                          }
                          else
-                             P.writeToFile("output.txt");
+                             P.writeToFile("Text.txt");
 
                          break;
                      }
@@ -272,8 +292,9 @@ int main() {
                          if (sym == '!')
                              return 0;
 
-                         else
+                         else 
                              return 0;
+                         
 
                          break;
 
@@ -307,10 +328,10 @@ int main() {
          
 
             gotoRowCol( cursorRow,  0);
-            //P.printParagraph();
-
-            for (int i = 0; i < P.getlinesize(cursorRow); i++)
-                cout << P.getLine(cursorRow)->getCharAt(i);
+            
+            S.printSection(cursorRow);
+            /*for (int i = 0; i < P.getlinesize(cursorRow); i++)
+                cout << P.getLine(cursorRow)->getCharAt(i);*/
 
             gotoRowCol( cursorRow,  cursorColumn);
           
@@ -318,17 +339,37 @@ int main() {
          }
      }
 
+     
+
     return 0;
 }
 
-int main543() {
+int main6786() {
 
-    P.addline("haha");
-    P.addline("haha");
-    P.addline("haha");
-    P.addline("haha");
+    //P.addline("haha");
+    //P.addline("haha");
+    //P.addline("haha");
+    //P.addline("haha");
    
-    P.printParagraph();
+    //P.printParagraph();
+
+
+    //S.addParagraph("heelo");
+    //S.paragraphIncrement();
+    //S.addParagraph("heelo");
+    //S.paragraphIncrement();
+    //S.addParagraph("heelo");
+    //S.paragraphIncrement();
+
+    //S.sectionPrint();
+    //cout << endl;
+
+    //S.insertAt(3, 0, 6, 'r');
+
+    //S.sectionPrint();
+    //cout << endl;
+
+    //cout << S.totalParagraph();
 
     //while (true) {
     //    int ch = _getch();

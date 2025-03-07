@@ -13,7 +13,12 @@ class paragraph
     int lastFoundIndex = -1;  
     char* lastPattern = new char[100] {};
 
+    
+
 public:
+
+    paragraph();
+    paragraph(const char* c);
 
 	void insertAt(int lineIndex, int columnIndex, char sym);
 	void deleteAt(int lineIndex, int columnIndex);
@@ -36,7 +41,7 @@ public:
     void pasteLine(int lineindex);
 
 	void writeToFile(const char* filename) const; 
-    void readfromfile(const char* filename)const;
+    void readfromfile(const char* filename);
 
 	void printParagraph();
 

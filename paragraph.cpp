@@ -1,6 +1,15 @@
 #include "paragraph.h"
+#include"mode.h"
 
 using namespace std;
+
+
+paragraph::paragraph(const char* c) {
+	addline(c);
+}
+paragraph::paragraph() {
+	addline();
+}
 
 void paragraph::addline() {
 	line* newLine = new line();
@@ -13,7 +22,6 @@ void paragraph::addline(const char* c) {
 	P.push_back(new line(c));
 }
 
-
 void paragraph::insertline(int lineIndex, int columnIndex) {
 	
 	if (lineIndex < 0 or lineIndex >= P.size())
@@ -24,13 +32,12 @@ void paragraph::insertline(int lineIndex, int columnIndex) {
 
 	line* newLine = P[lineIndex]->splitLeft(columnIndex);
 	line* newLine1 = P[lineIndex]->splitRight(columnIndex);
-
 	delete P[lineIndex]; 
 	P[lineIndex] = newLine;
-
-	
 	P.insert(P.begin() + lineIndex + 1, newLine1);
+
 }
+
 void paragraph::printParagraph() {
 
 	for (int i = 0; i < P.size(); i++) {
@@ -39,12 +46,12 @@ void paragraph::printParagraph() {
 	}
 
 }
-
 void paragraph::printLine(int lineIndex) {
 
 	P[lineIndex]->printline();
 
 }
+
 int paragraph::getlinesize(int lineIndx) {
 	return P[lineIndx]->size();
 }
@@ -56,14 +63,12 @@ int paragraph::findprevword(int lineIndex, int columnIndex) {
 
 	return P[lineIndex]->findPrevWord(columnIndex);
 }
-
 void paragraph::startofline(int lineIndex, int& index) {
 	P[lineIndex]->startofLine(index);
 }
 void paragraph::endofline(int lineIndex, int& index) {
 	P[lineIndex]->endofLine(index);
 }
-
 void paragraph::Toggle(int lineIndex, int columnIndex) {
 
 	if (columnIndex < 0 or columnIndex > P[lineIndex]->size() or lineIndex < 0 or lineIndex >= P.size())
@@ -99,7 +104,6 @@ void paragraph::deletefrom(int lineIndex, int columnIndex) {
 
 	P[lineIndex]->deleteFrom(columnIndex);
 }
-
 void paragraph::CopyLine(int lineindex) {
 	
 	line* A = getLine(lineindex);
@@ -117,17 +121,22 @@ void paragraph::pasteLine(int lineindex) {
 		return;
 	(P.insert(P.begin() + lineindex, new line(copyLine)));
 	
-	/*for (int i = 0; i < 5; i++)
-		cout << copyLine[i] ;*/
+
 
 }
+
+
 
 void paragraph::writeToFile(const char* filename) const {
 	ofstream outputFile(filename);
 	if (!outputFile.is_open())
 		return;
+	outputFile << P.size() << endl;
 
 	for (int i = 0; i < P.size(); ++i) {
+
+		outputFile << P[i]->size() << endl;
+
 		const char* content = P[i]->getContent();
 
 		for (int j = 0; content[j] != '\0'; ++j) 
@@ -139,22 +148,40 @@ void paragraph::writeToFile(const char* filename) const {
 
 	outputFile.close();
 }
-void paragraph::readfromfile(const char* filename)const {
+void paragraph::readfromfile(const char* filename) {
+	ifstream inputFile(filename);
+	if (!inputFile.is_open())
+		return;
 
+	P.clear(); 
+	char A[20];
+	int Lsize=0,Csize=0 ,j=0 , k =0;
+	inputFile >> Lsize;
+	char sym;
+	int temp ;
+	while (j < Lsize) {
+		temp = 0;
+		k = 0;
+		inputFile >> Csize;
+		
+		while (k<Csize) {
+
+			inputFile >> sym;
+
+			if (sym != '*')
+				A[temp++] = sym;
+			else
+				A[temp++] = ' ';
+
+			inputFile >> sym;
+
+			k++;
+		}
+
+		line* newLine = new line(A); 
+		P.push_back(newLine);
+		
+		j++;
+	}
+	inputFile.close();
 }
-//
-//void paragraph::writeToFile(const std::string& filename) const {
-//	ofstream outputFile(filename);
-//
-//	if (!outputFile.is_open())
-//		return;
-//	
-//	/*for (const auto& line : P) 
-//		outputFile << line->getContent() <<endl; */ 
-//	
-//
-//	
-//	outputFile.close();
-//
-//}
-

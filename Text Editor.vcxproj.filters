@@ -58,7 +58,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="output.txt">
+    <Text Include="Text.txt">
       <Filter>Header Files\Source Files</Filter>
     </Text>
   </ItemGroup>
