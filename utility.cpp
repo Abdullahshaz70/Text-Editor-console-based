@@ -60,40 +60,16 @@ int strsize(const char* data) {
 	return count;
 }
 
-char* stringcopy(const char* src) {
-	if (src == nullptr) 
-		return nullptr; 
-	
 
-	int length = 0;
-	while (src[length] != '\0') 
-		length++;
-	
+void stringcopy(char* destination, const char* source) {
+	if (!source or !destination) return; 
 
-	char* dest = new char[length + 1];
-	for (int i = 0; i <= length; i++) 
-		dest[i] = src[i];
-	
-	src = nullptr;
-
-	return dest; 
-}
-
-void stringcopy(char* Cs , char* src) {
-	if (src == nullptr) {
-		Cs = nullptr;
-		return;
+	int i = 0;
+	while (source[i] != '\0') { 
+		destination[i] = source[i];
+		i++;
 	}
-
-	int length = 0;
-	while (src[length] != '\0')
-		length++;
-
-	delete[] Cs;
-	Cs = new char[length + 1];
-
-	for (int i = 0; i <= length; i++)
-		Cs[i] = src[i];
+	destination[i] = '\0'; 
 }
 
 

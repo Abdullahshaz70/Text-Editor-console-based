@@ -14,10 +14,23 @@ line::line() {
 
 line::line(const char* data) {
 
-    Cs = new char[strsize(data) + 1] {};
-    stringcopy(data);
-   
+    if (data) {
+        length = strsize(data);
+        Cs = new char[length + 1];
+        //stringcopy(data);
+
+        for (int i = 0; i < length; i++) {
+            Cs[i] = data[i];
+        }
+        Cs[length] = '\0';  
+
+    }
+    else {
+        Cs = new char[1];
+        Cs[0] = '\0'; 
+    }
 }
+
 line::~line() {
     clear();
 }
@@ -34,32 +47,34 @@ void line::clearLine(int row, int col, int lineLength) {
     gotoRowCol(row, col);
 }
 int line::size() {
-    
-    int count = 0;
+    return length;
+   /* int count = 0;
     for (int i = 0; Cs[i] != '\0'; i++)
         count++;
-    return count;
+    return count;*/
 }
 void line::printline() {
     for (int i = 0; i < size(); i++)
         cout<<Cs[i];
 }
-void line::insertAt(int index, char sym) {
-    char* newChar = new char[length + 2];
 
+
+void line::insertAt(int index, char sym) {
+    if (index < 0 or index > length) 
+        return;
+
+    char* newChar = new char[length + 2];
     for (int i = 0; i < index; i++)
         newChar[i] = Cs[i];
-
     newChar[index] = sym;
-
     for (int i = index; i < length; i++)
         newChar[i + 1] = Cs[i];
-
     newChar[length + 1] = '\0';
     delete[] Cs;
     Cs = newChar;
     length++;
 }
+
 void line::deleteAt(int index) {
     if (index < 0 or index >= length)
         return;
@@ -118,46 +133,42 @@ void line::startofLine(int& index) {
 void line::endofLine(int& index) {
     index = size();
 }
-line* line::splitRight(int index) {
 
-    if (index > size())
-        return new line();
-
-    line* newLine = new line();
-
-    newLine->length = size() - index;
-
-    newLine->Cs = new char [newLine->length + 1] {};
-
-    for (int i = 0; i < newLine->length; i++)
-        newLine->Cs[i] = Cs[i + index];
-
-    newLine->Cs[newLine->length] = '\0';
-
-    return newLine;
-
-}
 line* line::splitLeft(int index) {
-
-    if (index < 0)
-        return new line();
-
     line* newLine = new line();
+
+    if (index < 0 or index > length)
+        return newLine;
 
     newLine->length = index;
-
-    newLine->Cs = new char [newLine->length + 1] {};
+    newLine->Cs = new char[newLine->length + 1];
 
     for (int i = 0; i < newLine->length; i++)
         newLine->Cs[i] = Cs[i];
 
     newLine->Cs[newLine->length] = '\0';
 
+   
     return newLine;
-
 }
 
+line* line::splitRight(int index) {
+    line* newLine = new line();
 
+    if (index < 0 or index > length)
+        return newLine;
+
+    newLine->length = length - index;
+    newLine->Cs = new char[newLine->length + 1];
+
+    for (int i = 0; i < newLine->length; i++)
+        newLine->Cs[i] = Cs[index + i];
+
+    newLine->Cs[newLine->length] = '\0';
+
+ 
+    return newLine;
+}
 
 int line::countDoubleEnter(line* lines[], int size) {
     int count = 0;

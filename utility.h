@@ -10,9 +10,9 @@ void getRowColbyLeftClick(int& rpos, int& cpos);
 bool islower(char c);
 bool isUpper(char c);
 int strsize(const char* data);
-char* stringcopy(const char* src);
+void stringcopy(char* destination, const char* source);
 bool isDelimiter(char c);
-void stringcopy(char* Cs, char* src);
+
 
 bool wordFinder(char const* S1, char const* S2);
 

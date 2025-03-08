@@ -2,13 +2,13 @@
 #include<iostream>
 #include<vector>
 #include"line.h"
-
+#include"utility.h"
 
 using namespace std;
 class paragraph
 {
 	vector <line*> P;
-    char* copyLine;
+    static char* copyLine ;
 
     int lastFoundIndex = -1;  
 
@@ -20,6 +20,7 @@ public:
 
     paragraph();
     paragraph(const char* c);
+    paragraph(const paragraph& other);
 
 	void insertAt(int lineIndex, int columnIndex, char sym);
 	void deleteAt(int lineIndex, int columnIndex);
@@ -38,34 +39,57 @@ public:
 	void printLine(int lineIndex);
 	int getlinesize(int lineIndx);
 
-    void CopyLine(int lineindex);
+    static void CopyLine(paragraph& P, int lineIndex);
+
     void pasteLine(int lineindex);
 
 	void writeToFile(const char* filename) const; 
     void readfromfile(const char* filename);
 
-	void printParagraph();
+    void popBack();
 
+    void printParagraph() {
+        for (int i = 1; i < P.size(); ++i) {
+            if (P[i] != nullptr) {
+                cout << P[i]->getContent(); 
+                cout << endl; 
+            }
+            else if (P[i]->isEmpty()) {
+                cout <<" ";
 
-    bool isLineEmpty(int lineIndex) {
-        // Check for out-of-bounds access
-        if (lineIndex < 0 || lineIndex >= P.size()) {
-            return true;
+            }
+            
         }
-
-        // Ensure P[lineIndex] is not null before accessing it
-        if (P[lineIndex] == nullptr) {
-            return true;
-        }
-
-        // Check if the line is empty
-        return P[lineIndex]->isEmpty();
     }
 
 
+    bool isLineEmpty(int lineIndex); 
 
 
+    void deleteline(int lineIndex) {
+        P[lineIndex + 1]->clear();
+    }
 
+    paragraph& operator=(const paragraph& other) {
+        if (this != &other) { 
+            for (int i = 0; i < P.size(); i++) {
+                delete P[i];
+            }
+            P.clear();
+
+          
+            for (int i = 0; i < other.P.size(); i++) {
+                P.push_back(new line(*other.P[i])); \
+            }
+        }
+        return *this;
+    }
+    
+
+
+    void Erase(int lineindex) {
+        P.erase(P.begin()+lineindex);
+    }
 
 
     void searchPattern(char* pattern, bool forward) {
@@ -89,6 +113,7 @@ public:
         lastFoundIndex = -1;  
     }
 
+
     void moveToNextOccurrence() {
         if (strsize(lastPattern) == 0 or lastFoundIndex == -1) {
          cout << "No previous search!\n";
@@ -105,6 +130,7 @@ public:
 
         cout << "No more occurrences found!\n";
     }
+
 
     void moveToPreviousOccurrence() {
         if (strsize(lastPattern) == 0 or lastFoundIndex == -1) {
@@ -124,6 +150,8 @@ public:
     }
 
 
+
+ 
 
 
 };

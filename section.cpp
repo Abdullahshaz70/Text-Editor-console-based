@@ -97,9 +97,9 @@ void section::endOfLine(int lineIndex, int& columnIndex) {
     S[getParagraphNumber(lineIndex) - 1]->endofline(lineIndex, columnIndex);
 }
 
-void section::copyLine(int lineIndex) {
-    S[getParagraphNumber(lineIndex) - 1]->CopyLine(lineIndex);
-}
+//void section::copyLine(int lineIndex) {
+//    S[getParagraphNumber(lineIndex) - 1]->CopyLine(lineIndex);
+//}
 void section::pasteLine(int lineIndex) {
     S[getParagraphNumber(lineIndex) - 1]->pasteLine(lineIndex);
 }
@@ -108,8 +108,10 @@ void section::toggle(int lineindex , int index) {
     S[getParagraphSize(lineindex) - 1]->Toggle(lineindex, index);
 }
 
-void section::insertparagraph(int lineIndex, int columnIndex) {
-    
-    S[getParagraphNumber(lineIndex) - 1]->insertline(lineIndex, columnIndex);
+//void section::insertparagraph(int lineIndex, int columnIndex) {
+//    
+//    S[getParagraphNumber(lineIndex) - 1]->insertline(lineIndex, columnIndex);
+//
+//}
 
-}
+

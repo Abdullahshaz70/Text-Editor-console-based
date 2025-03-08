@@ -5,7 +5,7 @@
 class line {
     char* Cs;
 
-    int length;
+    int length=0;
 public:
     
     int MAX_LENGHT = 20;
@@ -40,25 +40,25 @@ public:
     const char* getContent() const;
     
   
- void stringcopy(const char* src) {
-        if (src == nullptr)
-            
+ //void stringcopy(const char* src) {
+ //       if (src == nullptr)
+ //           
 
 
-        int length = 0;
-        while (src[length] != '\0')
-            length++;
+ //       int length = 0;
+ //       while (src[length] != '\0')
+ //           length++;
 
 
-        char* dest = new char[length + 1];
-        for (int i = 0; i <= length; i++)
-            dest[i] = src[i];
+ //       char* dest = new char[length + 1];
+ //       for (int i = 0; i <= length; i++)
+ //           dest[i] = src[i];
 
-        src = nullptr;
+ //       src = nullptr;
 
-        Cs = dest;
-        dest = nullptr;
-    }
+ //       Cs = dest;
+ //       dest = nullptr;
+ //  }
 
  int strsize(const char* data) {
      int count = 0;

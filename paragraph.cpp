@@ -1,8 +1,10 @@
 #include "paragraph.h"
 #include"mode.h"
+#include"utility.h"
 
 using namespace std;
 
+char* paragraph::copyLine = nullptr;
 
 paragraph::paragraph(const char* c) {
 	addline(c);
@@ -10,42 +12,39 @@ paragraph::paragraph(const char* c) {
 paragraph::paragraph() {
 	addline();
 }
+paragraph::paragraph(const paragraph& other) {
+	for (const auto& linePtr : other.P) {
+		P.push_back(new line(linePtr->getContent()));
+	}
+}
 
 void paragraph::addline() {
+	
 	line* newLine = new line();
 	P.push_back(newLine);
-
-}
-
-void paragraph::addline(const char* c) {
-	//line* newLine = new line(c);
-	P.push_back(new line(c));
-}
-
-void paragraph::insertline(int lineIndex, int columnIndex) {
 	
-	if (lineIndex < 0 or lineIndex >= P.size())
-		return;
-	if (columnIndex < 0 or columnIndex > P[lineIndex]->size() )
-		return;
+}
+void paragraph::addline(const char* c) {
+	
+	line* newLine = new line(c);
+	P.push_back(newLine);
+	
+}
+void paragraph::insertline(int lineIndex, int columnIndex) {
+	if (lineIndex < 0 or lineIndex >= P.size()) return; 
+
+	line* leftPart = P[lineIndex+1]->splitLeft(columnIndex);  
+	line* rightPart = P[lineIndex+1]->splitRight(columnIndex); 
 
 
-	line* newLine = P[lineIndex]->splitLeft(columnIndex);
-	line* newLine1 = P[lineIndex]->splitRight(columnIndex);
-	delete P[lineIndex]; 
-	P[lineIndex] = newLine;
-	P.insert(P.begin() + lineIndex + 1, newLine1);
+	delete P[lineIndex+1];
+	P[lineIndex+1] = leftPart;
 
+	
+	P.insert(P.begin() + lineIndex + 2, rightPart);
 }
 
-void paragraph::printParagraph() {
 
-	for (int i = 0; i < P.size(); i++) {
-		P[i]->printline();
-		cout << endl;
-	}
-
-}
 void paragraph::printLine(int lineIndex) {
 
 	P[lineIndex]->printline();
@@ -53,7 +52,8 @@ void paragraph::printLine(int lineIndex) {
 }
 
 int paragraph::getlinesize(int lineIndx) {
-	return P[lineIndx]->size();
+
+	return P[lineIndx+1]->size();
 }
 
 int paragraph::findnextword(int lineIndex , int columnIndex) {
@@ -77,6 +77,8 @@ void paragraph::Toggle(int lineIndex, int columnIndex) {
 	P[lineIndex]->toggle(columnIndex);
 
 }
+
+
 int paragraph::paragraphSize() {
 	return P.size();
 }
@@ -87,42 +89,93 @@ line* paragraph::getLine(int index){
 
 	return P[index];
 }
-void paragraph::insertAt(int lineIndex, int columnIndex, char sym) {
-	if (lineIndex < 0 or lineIndex > P.size())
-		return;
 
-	P[lineIndex]->insertAt(columnIndex, sym);
+void paragraph::popBack() {
+	P.pop_back();
 }
+
+
+void paragraph::insertAt(int lineIndex, int columnIndex, char sym) {
+	if (lineIndex < 0 or lineIndex >= P.size()) return;
+
+	if (P[lineIndex] == nullptr) {
+		P[lineIndex] = new line(""); 
+	}
+
+
+	if (columnIndex > P[lineIndex+1]->size())
+		columnIndex = P[lineIndex]->size(); 
+
+	P[lineIndex+1]->insertAt(columnIndex, sym);
+}
+
+
+
 void paragraph::deleteAt(int lineIndex, int columnIndex) {
 	if (lineIndex < 0 or lineIndex > P.size())
 		return;
 
-	P[lineIndex]->deleteAt(columnIndex);
+	P[lineIndex+1]->deleteAt(columnIndex);
 }
 void paragraph::deletefrom(int lineIndex, int columnIndex) {
 	if (lineIndex < 0 or lineIndex > P.size())
 		return;
 
-	P[lineIndex]->deleteFrom(columnIndex);
+	P[lineIndex+1]->deleteFrom(columnIndex);
 }
 
-void paragraph::CopyLine(int lineindex) {
+void paragraph::CopyLine(paragraph& P, int lineindex){
 	
-	line* A = getLine(lineindex);
+	if (lineindex < 0 or lineindex >= P.paragraphSize())
+		return; 
 
-	copyLine = new char [A->size() + 1] {};
+	
+	if (copyLine != nullptr) 
+		delete[] copyLine;
+	
+	const char* lineContent = P.getLine(lineindex+1)->getContent();
+	int length = P.getlinesize(lineindex);
 
-	for (int i = 0; i < A->size(); i++)
-		copyLine[i] = A->getCharAt(i);
-
-	copyLine[A->size() + 1] = '\0';
+	
+	copyLine = new char[length + 1];
+	stringcopy(copyLine, lineContent); 
 
 }
-void paragraph::pasteLine(int lineindex) {
-	if (lineindex < 0 or lineindex > P.size())
-		return;
-	(P.insert(P.begin() + lineindex, new line(copyLine)));
+
+
+
+
+
+void paragraph::pasteLine(int lineIndex) {
+	if (copyLine == nullptr)
+		return; 
+
+	if (lineIndex < 0 or lineIndex > paragraphSize())
+		return; 
+
 	
+	insertline(lineIndex, 0); 
+
+
+	line* newLine = getLine(lineIndex+1);
+
+
+	for (int i = 0; copyLine[i] != '\0'; i++) {
+		newLine->insertAt(i, copyLine[i]); 
+	}
+}
+
+
+bool paragraph::isLineEmpty(int lineIndex) {
+	if (lineIndex < 0 or lineIndex >= P.size())
+		return true;
+
+
+
+	if (P[lineIndex] == nullptr)
+		return true;
+
+	return P[lineIndex]->isEmpty();
 }
 
 
