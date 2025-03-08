@@ -4,11 +4,18 @@
 #include"line.h"
 #include"utility.h"
 
+
+
 using namespace std;
 class paragraph
 {
 	vector <line*> P;
     static char* copyLine ;
+
+ /*   bool isSelecting = false;
+    int selectStartRow = -1, selectStartCol = -1;
+    int selectEndRow = -1, selectEndCol = -1;*/
+
 
     int lastFoundIndex = -1;  
 
@@ -47,7 +54,19 @@ public:
     void readfromfile(const char* filename);
 
     void popBack();
+    bool isLineEmpty(int lineIndex); 
 
+    void indent(int lineIndex,int cursorColumn) {
+        
+        P[lineIndex+1]->indent(cursorColumn);
+    }
+
+    void unindent(int lineIndex, int cursorColumn) {
+
+        P[lineIndex + 1]->unindent(cursorColumn);
+    }
+
+    
     void printParagraph() {
         for (int i = 1; i < P.size(); ++i) {
             if (P[i] != nullptr) {
@@ -63,13 +82,10 @@ public:
     }
 
 
-    bool isLineEmpty(int lineIndex); 
-
 
     void deleteline(int lineIndex) {
         P[lineIndex + 1]->clear();
     }
-
     paragraph& operator=(const paragraph& other) {
         if (this != &other) { 
             for (int i = 0; i < P.size(); i++) {
@@ -84,14 +100,9 @@ public:
         }
         return *this;
     }
-    
-
-
     void Erase(int lineindex) {
         P.erase(P.begin()+lineindex);
     }
-
-
     void searchPattern(char* pattern, bool forward) {
         if (!pattern or strsize(pattern) == 0) return; 
 
@@ -112,8 +123,6 @@ public:
        cout << "Pattern not found!\n";
         lastFoundIndex = -1;  
     }
-
-
     void moveToNextOccurrence() {
         if (strsize(lastPattern) == 0 or lastFoundIndex == -1) {
          cout << "No previous search!\n";
@@ -130,8 +139,6 @@ public:
 
         cout << "No more occurrences found!\n";
     }
-
-
     void moveToPreviousOccurrence() {
         if (strsize(lastPattern) == 0 or lastFoundIndex == -1) {
             cout << "No previous search!\n";

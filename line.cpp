@@ -183,26 +183,27 @@ int line::countDoubleEnter(line* lines[], int size) {
 }
 
 
-void line::indent() {
-    const int tabSize = 4;  
-    char* newCs = new char[length + tabSize + 1] {};
+void line::indent(int cursorColumn) {
+    if (cursorColumn < 0 or cursorColumn > length)
+        return;
 
-  
-    for (int i = 0; i < tabSize; i++)
-        newCs[i] = ' ';
+    char* newCs = new char[length + 2] {}; 
 
-  
-    for (int i = 0; i < length; i++)
-        newCs[tabSize + i] = Cs[i];
+    for (int i = 0; i < cursorColumn; i++)
+        newCs[i] = Cs[i];
 
-    newCs[length + tabSize] = '\0'; 
+    newCs[cursorColumn] = '\t';
 
-   
+    for (int i = cursorColumn; i < length; i++)
+        newCs[i + 1] = Cs[i];
+
+    newCs[length + 1] = '\0';
+
     delete[] Cs;
     Cs = newCs;
-
-    length += tabSize;
+    length += 1;
 }
+
 
 
 const char* line:: getContent() const {

@@ -28,8 +28,41 @@ public:
     void startofLine(int& index);
     void endofLine(int& index);
     void toggle(int index);
-    void indent();
+    void indent(int cursorColumn);
  
+    void unindent(int cursorColumn) {
+        const int tabSize = 4;
+
+        if (cursorColumn < tabSize)
+            return; 
+        int spacesToRemove = 0;
+        for (int i = 0; i < tabSize; i++) {
+            if (Cs[cursorColumn - (i + 1)] == ' ')
+                spacesToRemove++;
+            else
+                break;
+        }
+
+        if (spacesToRemove == 0)
+            return; 
+
+        char* newCs = new char[length - spacesToRemove + 1] {};
+
+    
+        for (int i = 0; i < cursorColumn - spacesToRemove; i++)
+            newCs[i] = Cs[i];
+
+   
+        for (int i = cursorColumn; i < length; i++)
+            newCs[i - spacesToRemove] = Cs[i];
+
+        newCs[length - spacesToRemove] = '\0';
+
+        delete[] Cs;
+        Cs = newCs;
+        length -= spacesToRemove;
+    }
+
 
     line* splitRight(int index);
     line* splitLeft(int index);

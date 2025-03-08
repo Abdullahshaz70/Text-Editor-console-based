@@ -71,10 +71,10 @@ void paragraph::endofline(int lineIndex, int& index) {
 }
 void paragraph::Toggle(int lineIndex, int columnIndex) {
 
-	if (columnIndex < 0 or columnIndex > P[lineIndex]->size() or lineIndex < 0 or lineIndex >= P.size())
+	if (columnIndex < 0 or columnIndex > P[lineIndex+1]->size() or lineIndex < 0 or lineIndex >= P.size())
 		return;
 
-	P[lineIndex]->toggle(columnIndex);
+	P[lineIndex+1]->toggle(columnIndex);
 
 }
 
@@ -179,28 +179,52 @@ bool paragraph::isLineEmpty(int lineIndex) {
 }
 
 
-
 void paragraph::writeToFile(const char* filename) const {
 	ofstream outputFile(filename);
 	if (!outputFile.is_open())
 		return;
-	outputFile << P.size() << endl;
+
+	outputFile << P.size() << endl; 
+
+	int enterCount = 0; 
 
 	for (int i = 0; i < P.size(); ++i) {
-
-		outputFile << P[i]->size() << endl;
+		outputFile << P[i]->size() << endl; 
 
 		const char* content = P[i]->getContent();
+		if (content[0] == '\0') { 
+			enterCount++;
+			if (enterCount == 2) {
+				outputFile << "[SECTION]" << endl;
+				enterCount = 0; 
+				continue;
+			}
+			else if (enterCount == 3) {
+				outputFile << "[CHAPTER]" << endl;
+				enterCount = 0; 
+				continue;
+			}
+		}
+		else {
+			enterCount = 0; 
+		}
 
-		for (int j = 0; content[j] != '\0'; ++j) 
-			outputFile.put(content[j] == ' ' ? '*' : content[j]);
-		
+		for (int j = 0; content[j] != '\0'; ++j) {
+			if (content[j] == ' ')
+				outputFile.put('_'); 
+			else if (content[j] == '\t')
+				outputFile << "[TAB]"; 
+			else
+				outputFile.put(content[j]);
+		}
 
 		outputFile.put('\n'); 
 	}
 
 	outputFile.close();
 }
+
+
 void paragraph::readfromfile(const char* filename) {
 	ifstream inputFile(filename);
 	if (!inputFile.is_open())
