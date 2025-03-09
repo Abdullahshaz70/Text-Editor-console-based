@@ -1,4 +1,4 @@
-//#include"utility.h"
+﻿//#include"utility.h"
 #include <iostream>
 #include <conio.h>
 #include "mode.h"
@@ -119,8 +119,6 @@ void backSpace() {
 
 
 }
-
-
 void enter_Insertion() {
 
     S.insertline(cursorRow, cursorColumn);
@@ -205,6 +203,9 @@ int main() {
                     cursorColumn = 0;
                     gotoRowCol(cursorRow, cursorColumn);
                     break;
+                case 's':
+                    S.writeToFile("Text.txt");
+                    break;
                 case 'h':
                     moveLeft();
                     break;
@@ -263,34 +264,6 @@ int main() {
                     S.endOfLine(cursorRow, cursorColumn);
                     gotoRowCol(cursorRow, cursorColumn);
                     break;
-
-                //case 'y':
-                //    sym = _getch();
-                //    if (sym == 'y')
-                //        S.copyLine(cursorRow);
-                //    else
-                //        S.print();
-                //    break;
-                //case 'P':
-                //    S.pasteLine(cursorRow);
-                //    gotoRowCol(cursorRow, 0);
-                //    for (int i = 0; i < S.getLineSize(cursorRow); i++)
-                //        cout << S.getLine(cursorRow)->getCharAt(i);
-                //    cursorColumn = 0;
-                //    gotoRowCol(cursorRow, cursorColumn);
-                //    system("cls");
-                //    break;
-                //case 'p':
-                //    
-                //    S.addline(cursorRow - 1);
-                //    cursorRow++;
-                //    if (cursorRow > 0)
-                //        cursorRow--;
-                //    gotoRowCol(cursorRow, cursorColumn);
-                //    S.pasteLine(cursorRow);
-                //    system("cls");
-                //    break;
-
                 case 'y':
                     sym = _getch();
                     if (sym == 'y')
@@ -347,3 +320,9 @@ int main() {
     }
         return 0;
 }
+
+
+
+
+
+

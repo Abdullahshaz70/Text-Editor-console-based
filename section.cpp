@@ -7,11 +7,16 @@ section::~section() {
         delete p;
     S.clear();
 }
+section::section(const section& other) {
+    for (int i = 0; i < other.S.size(); i++) 
+        S.push_back(new paragraph(*other.S[i])); 
+    
+}
+
 
 void section::addparagraph() {
     S.push_back(new paragraph());
 }
-
 void section::addline(int cursorRow) {
     S[getParagraphNumber(cursorRow)]->addline();
 }
@@ -175,3 +180,85 @@ void section::unindent(int lineIndex, int cursorColumn) {
     S[paraIndex]->unindent(lineIndex, cursorColumn);
 }
 
+int section::sectionSize() {
+    return S.size();
+}
+
+void  section::Erase(int paragraphIndex) {
+    if (paragraphIndex < 0 || paragraphIndex >= S.size()) return;
+
+    delete S[paragraphIndex];
+    S.erase(S.begin() + paragraphIndex);
+}
+void  section::deleteline(int lineIndex) {
+    int paraIndex = getParagraphNumber(lineIndex) ;
+
+    if (paraIndex < 0 || paraIndex >= S.size() || S[paraIndex] == nullptr) return;
+
+    S[paraIndex]->deleteline(lineIndex);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+void section::writeToFile(const char* filename) const {
+    ofstream outputFile(filename);
+    if (!outputFile.is_open())
+        return;
+
+    outputFile << S.size() << endl; // Total paragraphs in this section
+
+    int enterCount = 0; // Track empty lines for section and chapter markers
+
+    for (int i = 0; i < S.size(); ++i) {
+        outputFile << S[i]->paragraphSize() << endl; // Number of lines in the paragraph
+
+        for (int j = 0; j < S[i]->paragraphSize(); ++j) {
+            const char* content = S[i]->getLine(j)->getContent();
+
+            if (content[0] == '#') {
+                outputFile << "[PARAGRAPH]" << endl;
+                continue;
+            }
+
+            if (content[0] == '\0') { // Empty line detected
+                enterCount++;
+                if (enterCount == 2) {
+                    outputFile << "[SECTION]" << endl;
+                    enterCount = 0;
+                    continue;
+                }
+                else if (enterCount == 3) {
+                    outputFile << "[CHAPTER]" << endl;
+                    enterCount = 0;
+                    continue;
+                }
+            }
+            else {
+                enterCount = 0; // Reset enter count if non-empty line
+            }
+
+            // Write line content with space and tab formatting
+            for (int k = 0; content[k] != '\0'; ++k) {
+                if (content[k] == ' ')
+                    outputFile.put('_');
+                else if (content[k] == '\t')
+                    outputFile << "[TAB]";
+                else
+                    outputFile.put(content[k]);
+            }
+
+            outputFile.put('\n'); // Move to next line
+        }
+    }
+
+    outputFile.close();
+}
