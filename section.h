@@ -9,7 +9,7 @@
 class section
 {
 	vector <paragraph*> S;
-	int paragraphnumber = 0;
+	
 
 	public:
 
@@ -36,35 +36,6 @@ class section
 
 		void printSection(int lineIndex);
      
-		int getcharAt(int lineIndex, int columnIndex) {
-			S[getParagraphNumber(lineIndex)-1]->getLine(lineIndex)->getCharAt(columnIndex);
-		}
-
-		int countDoubleEnter() {
-			int count = 0;
-
-			for (int p = 0; p < S.size(); p++) { 
-				paragraph* para = S[p];
-
-				int i = 0;
-				while (i < para->paragraphSize()) { 
-					if (para->isLineEmpty(i)) {
-						count++;  
-						while (i < para->paragraphSize() and para->isLineEmpty(i)) 
-							i++;
-						
-					}
-					else
-						i++; 
-					
-				}
-			}
-
-			return count; 
-		}
-
-		int sectionSize() {
-			return S.size();
-		}
+	
 };
 

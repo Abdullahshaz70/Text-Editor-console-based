@@ -11,6 +11,8 @@ int cursorRow = 0, cursorColumn = 0;
 //line A;
 paragraph P;
 //section S;
+static int enterCount = 0;
+
 void modeChanges(char sym) {
     if (sym == 'i')
         insertionMode = true, normalMode = false;
@@ -429,6 +431,15 @@ int main() {
 
             if (insertionMode) {
                 switch (sym) {
+                    /*  case 24:
+
+                          P.CutSelectedText(cursorRow, cursorColumn, endRow, endCol);
+
+                          break;
+                      case 22:
+                          P.PasteText(cursorRow, cursorColumn);
+                          break;*/
+
                 case 8:
                     backSpace();
                     break;
@@ -587,7 +598,7 @@ int main() {
                 if (sym == ':') {
                     sym = _getch();
                     switch (sym) {
-                    case 'w': {
+                    case 'w':
                         sym = _getch();
                         if (sym == 'q') {
                             P.writeToFile("Text.txt");
@@ -596,45 +607,61 @@ int main() {
                         else
                             P.writeToFile("Text.txt");
                         break;
-                    }
+
                     case 'q':
                         return 0;
 
 
 
 
-                        //case '/': { 
-                        //    //cin >> command;
-                        //    P.searchPattern(H, true);
-                        //    system("pause");
-                        //    break;
-                        //}
-                        //case '?': { 
-                        //    //cin >> command;
-                        //       
-                        //    P.searchPattern(H, false);
-                        //    system("pause");
-                        //    break;
-                        //}
-                        //case 'n': 
-                        //    P.moveToNextOccurrence();
-                        //    system("pause");
-                        //    break;
-                        //case 'N': 
-                        //    P.moveToPreviousOccurrence();
-                        //    system("pause");
-                        //    break;
-                        //default:
-                        //    break;
-                        //
+                    case '/':
+                        char haha[100];
+                        cout << "Enter search term: ";
+                        cin >> haha;
+                        P.searchPattern(haha, true);
+                        system("pause");
+                        system("cls");
+                        break;
+
+                    case '?':
+                        char hehe[100];
+                        cout << "Enter search term: ";
+                        cin >> hehe;
+                        P.searchPattern(hehe, false);
+                        system("pause");
+                        system("cls");
+                        break;
+
+                    case 'n':
+                        P.moveToNextOccurrence();
+                        system("pause");
+                        system("cls");
+                        break;
+                    case 'N':
+                        P.moveToPreviousOccurrence();
+                        system("pause");
+                        system("cls");
+                        break;
+
+                    case 's':
+                        cout << "Enter word to replace: ";
+                        char oldWord[50], newWord[50]; 
+                        cin >> oldWord;
+
+                        cout << "Replace with: ";
+                        cin >> newWord;
+
+                        P.searchAndReplace(oldWord, newWord);
+                        system("cls");
+                        break;
                     }
                 }
+
             }
                 gotoRowCol(0, 0);
                 P.printParagraph();
                 gotoRowCol(cursorRow, cursorColumn);
         }
-
     }
         return 0;
 }

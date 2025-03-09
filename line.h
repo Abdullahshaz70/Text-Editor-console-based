@@ -105,5 +105,21 @@ public:
  }
 
 
+ void updateline (const char* newText) {
+     int newLength = 0;
+     while (newText[newLength] != '\0') newLength++; // Calculate length manually
+
+     char* newCs = new char[newLength + 1]; // Allocate memory
+     for (int i = 0; i < newLength; i++)
+         newCs[i] = newText[i];
+
+     newCs[newLength] = '\0'; // Null-terminate
+
+     delete[] Cs;  // Free old content
+     Cs = newCs;   // Assign new content
+     length = newLength; // Update length
+ }
+
+
  static int countDoubleEnter(line* lines[], int size);
 };
