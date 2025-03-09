@@ -3,7 +3,6 @@
 #include"utility.h"
 
 using namespace std;
-
 char* paragraph::copyLine = nullptr;
 
 paragraph::paragraph(const char* c) {
@@ -33,15 +32,15 @@ void paragraph::addline(const char* c) {
 void paragraph::insertline(int lineIndex, int columnIndex) {
 	if (lineIndex < 0 or lineIndex >= P.size()) return; 
 
-	line* leftPart = P[lineIndex+1]->splitLeft(columnIndex);  
-	line* rightPart = P[lineIndex+1]->splitRight(columnIndex); 
+	line* leftPart = P[lineIndex]->splitLeft(columnIndex);  
+	line* rightPart = P[lineIndex]->splitRight(columnIndex); 
 
 
-	delete P[lineIndex+1];
-	P[lineIndex+1] = leftPart;
+	delete P[lineIndex];
+	P[lineIndex] = leftPart;
 
 	
-	P.insert(P.begin() + lineIndex + 2, rightPart);
+	P.insert(P.begin() + lineIndex + 1, rightPart);
 }
 
 
@@ -53,7 +52,7 @@ void paragraph::printLine(int lineIndex) {
 
 int paragraph::getlinesize(int lineIndx) {
 
-	return P[lineIndx+1]->size();
+	return P[lineIndx]->size();
 }
 
 int paragraph::findnextword(int lineIndex , int columnIndex) {
@@ -70,12 +69,8 @@ void paragraph::endofline(int lineIndex, int& index) {
 	P[lineIndex]->endofLine(index);
 }
 void paragraph::Toggle(int lineIndex, int columnIndex) {
-
-	if (columnIndex < 0 or columnIndex > P[lineIndex+1]->size() or lineIndex < 0 or lineIndex >= P.size())
-		return;
-
-	P[lineIndex+1]->toggle(columnIndex);
-
+	
+	P[lineIndex]->toggle(columnIndex);
 }
 
 
@@ -94,74 +89,55 @@ void paragraph::popBack() {
 	P.pop_back();
 }
 
-
 void paragraph::insertAt(int lineIndex, int columnIndex, char sym) {
-	if (lineIndex < 0 or lineIndex >= P.size()) return;
-
-	if (P[lineIndex] == nullptr) {
-		P[lineIndex] = new line(""); 
-	}
-
-
-	if (columnIndex > P[lineIndex+1]->size())
-		columnIndex = P[lineIndex]->size(); 
-
-	P[lineIndex+1]->insertAt(columnIndex, sym);
-}
-
-
-
-void paragraph::deleteAt(int lineIndex, int columnIndex) {
-	if (lineIndex < 0 or lineIndex > P.size())
+	if (lineIndex < 0 || lineIndex >= P.size())
 		return;
 
-	P[lineIndex+1]->deleteAt(columnIndex);
+	if (columnIndex > P[lineIndex]->size())
+		columnIndex = P[lineIndex]->size();
+
+	P[lineIndex]->insertAt(columnIndex, sym);
 }
+void paragraph::deleteAt(int lineIndex, int columnIndex) {
+	if (lineIndex < 0 || lineIndex >= P.size() || P[lineIndex] == nullptr) {
+		return; 
+	}
+
+	P[lineIndex]->deleteAt(columnIndex);
+}
+
+
 void paragraph::deletefrom(int lineIndex, int columnIndex) {
 	if (lineIndex < 0 or lineIndex > P.size())
 		return;
 
-	P[lineIndex+1]->deleteFrom(columnIndex);
+	P[lineIndex]->deleteFrom(columnIndex);
 }
 
-void paragraph::CopyLine(paragraph& P, int lineindex){
-	
-	if (lineindex < 0 or lineindex >= P.paragraphSize())
-		return; 
+void paragraph::CopyLine(paragraph& P, int lineIndex) {
+	if (lineIndex < 0 || lineIndex >= P.paragraphSize()) return;
 
-	
-	if (copyLine != nullptr) 
-		delete[] copyLine;
-	
-	const char* lineContent = P.getLine(lineindex+1)->getContent();
-	int length = P.getlinesize(lineindex);
+	if (copyLine != nullptr)
+		delete[] copyLine;  
 
-	
-	copyLine = new char[length + 1];
-	stringcopy(copyLine, lineContent); 
+	const char* lineContent = P.getLine(lineIndex)->getContent();
+	int length = P.getlinesize(lineIndex);
 
+	copyLine = new char[length + 1];  
+	stringcopy(copyLine, lineContent);  
 }
-
-
-
-
 
 void paragraph::pasteLine(int lineIndex) {
-	if (copyLine == nullptr)
-		return; 
+	if (copyLine == nullptr) return;
 
-	if (lineIndex < 0 or lineIndex > paragraphSize())
-		return; 
+	if (lineIndex < 0 || lineIndex >= paragraphSize()) return;
 
-	
-	insertline(lineIndex, 0); 
+	insertline(lineIndex, 0);  // Insert a new line at the given index
 
-
-	line* newLine = getLine(lineIndex+1);
-
+	line* newLine = getLine(lineIndex);  // Get the newly created line
 
 	for (int i = 0; copyLine[i] != '\0'; i++) {
-		newLine->insertAt(i, copyLine[i]); 
+		newLine->insertAt(i, copyLine[i]);  // Insert copied content character by character
 	}
 }
 

@@ -1,117 +1,177 @@
 #include "section.h"
 
 
+section::section() {}
+section::~section() {
+    for (paragraph* p : S)
+        delete p;
+    S.clear();
+}
 
 void section::addparagraph() {
     S.push_back(new paragraph());
 }
 
-void section::insertAt(int lineIndex, int columnIndex, char sym) {
-
-    S[getParagraphNumber(lineIndex) - 1]->insertAt(lineIndex, columnIndex, sym);
-    
+void section::addline(int cursorRow) {
+    S[getParagraphNumber(cursorRow)]->addline();
 }
 
-//void section::insertAt(int lineIndex, int columnIndex, char sym) {
-//    if (S[getParagraphNumber(lineIndex)-1] == nullptr) return;
-//
-//   
-//    while (S.size() <= getParagraphNumber(lineIndex)-1) {
-//        S.push_back(new paragraph());
-//    }
-//
-//    
-//    if (sym == '\r') {
-//        if (S[getParagraphNumber(lineIndex) - 1]->isLineEmpty(lineIndex)) {
-//          
-//            S.insert(S.begin() + getParagraphNumber(lineIndex) - 1 + 1, new paragraph());
-//        }
-//        else {
-//     
-//            S[getParagraphNumber(lineIndex) - 1]->insertline(lineIndex, columnIndex);
-//        }
-//    }
-//    else {
-//      
-//        S[getParagraphNumber(lineIndex) - 1]->insertAt(lineIndex, columnIndex, sym);
-//    }
-//}
 
 
+void section::insertAt(int lineIndex, int columnIndex, char sym) {
+    int paraIndex = getParagraphNumber(lineIndex);
+    if (paraIndex < 0 || paraIndex >= S.size())
+        return;
 
-int  section::getParagraphNumber(int cursorRow) {
-
-    if (S.empty()) {
-        S.push_back(new paragraph());
+    int relativeLineIndex = lineIndex; 
+    if (paraIndex > 0) {
+ 
+        int offset = 0;
+        for (int i = 0; i < paraIndex; i++) {
+            offset += S[i]->paragraphSize();
+        }
+        relativeLineIndex -= offset;
     }
 
-    int paragraphIndex = 0;
+    S[paraIndex]->insertAt(relativeLineIndex, columnIndex, sym);
+}
+void section::insertline(int lineIndex, int columnIndex) {
+    int paraIndex = getParagraphNumber(lineIndex); 
+
+    if (paraIndex < 0 || paraIndex >= S.size() || S[paraIndex] == nullptr) {
+        return; 
+    }
+
+    S[paraIndex]->insertline(lineIndex, columnIndex); 
+}
+
+
+int section::getParagraphNumber(int cursorRow) {
+    if (S.empty()) {
+        S.push_back(new paragraph()); 
+    }
+
     int lineCount = 0;
 
     for (int i = 0; i < S.size(); i++) {
         int paraLines = S[i]->paragraphSize();
 
         if (cursorRow < lineCount + paraLines)
-            return i + 1;
+            return i; 
 
         lineCount += paraLines;
     }
 
-    return -1;
+    return S.size() - 1; 
 }
+int section::getLineSize(int lineIndex) {
+    int paraIndex = getParagraphNumber(lineIndex); 
+
+    if (paraIndex < 0 || paraIndex >= S.size() || S[paraIndex] == nullptr) {
+        return 0; 
+    }
+
+    return S[paraIndex]->getlinesize(lineIndex); 
+}
+
 void section::deleteAt(int lineIndex, int columnIndex) {
+    int paraIndex = getParagraphNumber(lineIndex); 
 
-    S[getParagraphNumber(lineIndex) - 1]->deleteAt(lineIndex, columnIndex);
+    if (paraIndex < 0 or paraIndex >= S.size() or S[paraIndex] == nullptr) {
+        return; 
+    }
 
+    S[paraIndex]->deleteAt(lineIndex, columnIndex);
 }
-void  section::printSection(int lineIndex) {
+void section::deleteFrom(int lineIndex, int columnIndex) {
 
-    for (int i = 0; i < S.size(); i++)
-        S[i]->printLine(lineIndex);
+    int paraIndex = getParagraphNumber(lineIndex) ; 
 
+    if (paraIndex < 0 or paraIndex >= S.size()) return;
+
+    S[paraIndex]->deletefrom(lineIndex, columnIndex);
 }
 
-int section::getlineSize( int lineIndex) {
-    return  S[getParagraphNumber(lineIndex) - 1]->getlinesize(lineIndex);
+
+void section::print() {
+    for (int i = 0; i < S.size(); i++) {
+        if (S[i] != nullptr) {
+            S[i]->printParagraph();
+            cout << endl;
+        }
+            
+    }
 }
+
+line* section::getLine(int index) {
+    int paragraphIndex = getParagraphNumber(index);
+    if (paragraphIndex < 0 || paragraphIndex >= S.size())
+        return nullptr;
+
+    return S[paragraphIndex]->getLine(index);
+}
+
+
+
 int section::getParagraphSize(int lineindex) {
 
-    return S[getParagraphNumber(lineindex) - 1]->paragraphSize();
+    return S[getParagraphNumber(lineindex)]->paragraphSize();
 
 }
 
-int section::findNextWord(int lineIndex, int columnIndex) {
-  return  S[getParagraphNumber(lineIndex) - 1]->findnextword(lineIndex, columnIndex);
+int section::findnextword(int lineIndex, int columnIndex) {
+  return  S[getParagraphNumber(lineIndex)]->findnextword(lineIndex, columnIndex);
 }
-int section::findPrevWord(int lineIndex, int columnIndex) {
-   return  S[getParagraphNumber(lineIndex) - 1]->findprevword(lineIndex, columnIndex);
+int section::findprevword(int lineIndex, int columnIndex) {
+   return  S[getParagraphNumber(lineIndex)]->findprevword(lineIndex, columnIndex);
 }
 
-void section::deleteFrom(int lineIndex, int columnIndex) {
-    S[getParagraphNumber(lineIndex) - 1]->deletefrom(lineIndex, columnIndex);
-}
+
 void section::startOfLine(int lineIndex, int& columnIndex) {
-    S[getParagraphNumber(lineIndex) - 1]->startofline(lineIndex, columnIndex);
+    S[getParagraphNumber(lineIndex) ]->startofline(lineIndex, columnIndex);
 }
 void section::endOfLine(int lineIndex, int& columnIndex) {
-    S[getParagraphNumber(lineIndex) - 1]->endofline(lineIndex, columnIndex);
+    S[getParagraphNumber(lineIndex)]->endofline(lineIndex, columnIndex);
 }
 
-//void section::copyLine(int lineIndex) {
-//    S[getParagraphNumber(lineIndex) - 1]->CopyLine(lineIndex);
-//}
+void section::copyLine(int lineIndex) {
+    int paragraphIndex = getParagraphNumber(lineIndex);
+    if (paragraphIndex < 0 || paragraphIndex >= S.size()) return;
+
+    S[paragraphIndex]->CopyLine(*S[paragraphIndex], lineIndex);
+}
+
 void section::pasteLine(int lineIndex) {
-    S[getParagraphNumber(lineIndex) - 1]->pasteLine(lineIndex);
+    int paragraphIndex = getParagraphNumber(lineIndex) ;
+    if (paragraphIndex < 0 || paragraphIndex >= S.size()) return;
+
+    S[paragraphIndex]->pasteLine(lineIndex);
 }
 
-void section::toggle(int lineindex , int index) {
-    S[getParagraphSize(lineindex) - 1]->Toggle(lineindex, index);
+
+void section::toggle(int lineindex, int index) {
+    int paraIndex = getParagraphNumber(lineindex) ; 
+
+    if (paraIndex < 0 || paraIndex >= S.size() || S[paraIndex] == nullptr) {
+        return; // Prevent invalid access
+    }
+
+    S[paraIndex]->Toggle(lineindex, index);
 }
 
-//void section::insertparagraph(int lineIndex, int columnIndex) {
-//    
-//    S[getParagraphNumber(lineIndex) - 1]->insertline(lineIndex, columnIndex);
-//
-//}
+void section::indent(int lineIndex, int cursorColumn) {
+    int paraIndex = getParagraphNumber(lineIndex);
 
+    if (paraIndex < 0 || paraIndex >= S.size()) return;
+
+    S[paraIndex]->indent(lineIndex, cursorColumn);
+}
+
+void section::unindent(int lineIndex, int cursorColumn) {
+    int paraIndex = getParagraphNumber(lineIndex) ; 
+
+    if (paraIndex < 0 || paraIndex >= S.size()) return; 
+
+    S[paraIndex]->unindent(lineIndex, cursorColumn);
+}
 

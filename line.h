@@ -29,40 +29,8 @@ public:
     void endofLine(int& index);
     void toggle(int index);
     void indent(int cursorColumn);
+    void unindent(int cursorColumn);
  
-    void unindent(int cursorColumn) {
-        const int tabSize = 4;
-
-        if (cursorColumn < tabSize)
-            return; 
-        int spacesToRemove = 0;
-        for (int i = 0; i < tabSize; i++) {
-            if (Cs[cursorColumn - (i + 1)] == ' ')
-                spacesToRemove++;
-            else
-                break;
-        }
-
-        if (spacesToRemove == 0)
-            return; 
-
-        char* newCs = new char[length - spacesToRemove + 1] {};
-
-    
-        for (int i = 0; i < cursorColumn - spacesToRemove; i++)
-            newCs[i] = Cs[i];
-
-   
-        for (int i = cursorColumn; i < length; i++)
-            newCs[i - spacesToRemove] = Cs[i];
-
-        newCs[length - spacesToRemove] = '\0';
-
-        delete[] Cs;
-        Cs = newCs;
-        length -= spacesToRemove;
-    }
-
 
     line* splitRight(int index);
     line* splitLeft(int index);
@@ -73,26 +41,6 @@ public:
     const char* getContent() const;
     
   
- //void stringcopy(const char* src) {
- //       if (src == nullptr)
- //           
-
-
- //       int length = 0;
- //       while (src[length] != '\0')
- //           length++;
-
-
- //       char* dest = new char[length + 1];
- //       for (int i = 0; i <= length; i++)
- //           dest[i] = src[i];
-
- //       src = nullptr;
-
- //       Cs = dest;
- //       dest = nullptr;
- //  }
-
  int strsize(const char* data) {
      int count = 0;
      for (int i = 0; data[i] != '\0'; i++)
@@ -107,19 +55,19 @@ public:
 
  void updateline (const char* newText) {
      int newLength = 0;
-     while (newText[newLength] != '\0') newLength++; // Calculate length manually
+     while (newText[newLength] != '\0') newLength++; 
 
-     char* newCs = new char[newLength + 1]; // Allocate memory
+     char* newCs = new char[newLength + 1];
      for (int i = 0; i < newLength; i++)
          newCs[i] = newText[i];
 
-     newCs[newLength] = '\0'; // Null-terminate
+     newCs[newLength] = '\0'; 
 
-     delete[] Cs;  // Free old content
-     Cs = newCs;   // Assign new content
-     length = newLength; // Update length
+     delete[] Cs; 
+     Cs = newCs;  
+     length = newLength; 
  }
 
 
- static int countDoubleEnter(line* lines[], int size);
+ 
 };

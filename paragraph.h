@@ -12,9 +12,6 @@ class paragraph
 	vector <line*> P;
     static char* copyLine ;
 
- /*   bool isSelecting = false;
-    int selectStartRow = -1, selectStartCol = -1;
-    int selectEndRow = -1, selectEndCol = -1;*/
 
 
     int lastFoundIndex = -1;  
@@ -50,29 +47,7 @@ public:
 
     void pasteLine(int lineindex);
 
-    //void CopySelectedText(int startRow, int startCol, int endRow, int endCol) {
-    //    if (copyLine) delete[] copyLine;  // Clear previous clipboard
-    //    int textSize = endCol - startCol;
-    //    copyLine = new char[textSize + 1];
-    //    for (int i = 0; i < textSize; i++)
-    //        copyLine[i] = P[startRow]->getCharAt(startCol + i);
-    //    copyLine[textSize] = '\0';
-    //}
-    //void CutSelectedText(int startRow, int startCol, int endRow, int endCol) {
-    //    CopySelectedText(startRow, startCol, endRow, endCol); // First copy the text
-    //    // Now remove it from the paragraph
-    //    for (int i = startCol; i < endCol; i++)
-    //        P[i]->clear();
-    //}
-    //void PasteText(int cursorRow, int cursorCol) {
-    //    if (!copyLine) return; // Nothing to paste
-    //    for (int i = 0; copyLine[i] != '\0'; i++)
-    //        P[i]->insertAt(cursorColumn + 1, copyLine[i]);
-    //       
-    //}
-
-
-
+  
 
 
 	void writeToFile(const char* filename) const; 
@@ -83,30 +58,33 @@ public:
 
     void indent(int lineIndex,int cursorColumn) {
         
-        P[lineIndex+1]->indent(cursorColumn);
+        P[lineIndex]->indent(cursorColumn);
     }
 
     void unindent(int lineIndex, int cursorColumn) {
 
-        P[lineIndex + 1]->unindent(cursorColumn);
+        P[lineIndex]->unindent(cursorColumn);
     }
 
     
     void printParagraph() {
-        for (int i = 1; i < P.size(); ++i) {
+        for (int i = 0; i < P.size(); ++i) {
             if (P[i] != nullptr) {
                 cout << P[i]->getContent(); 
                 cout << endl; 
             }
             else if (P[i]->isEmpty()) {
                 cout <<" ";
-
+                
             }
             
         }
     }
 
 
+    void Erase(int lineindex) {
+        P.erase(P.begin() + lineindex);
+    }
 
     void deleteline(int lineIndex) {
         P[lineIndex + 1]->clear();
@@ -125,10 +103,7 @@ public:
         }
         return *this;
     }
-    void Erase(int lineindex) {
-        P.erase(P.begin()+lineindex);
-    }
-
+  
 
     void searchPattern(char* pattern, bool forward) {
         if (!pattern or strsize(pattern) == 0) return; 

@@ -61,15 +61,15 @@ int strsize(const char* data) {
 }
 
 
-void stringcopy(char* destination, const char* source) {
-	if (!source or !destination) return; 
+void stringcopy(char* A, const char* B) {
+	if (!B or !A) return; 
 
 	int i = 0;
-	while (source[i] != '\0') { 
-		destination[i] = source[i];
+	while (B[i] != '\0') { 
+		A[i] = B[i];
 		i++;
 	}
-	destination[i] = '\0'; 
+	A[i] = '\0'; 
 }
 
 

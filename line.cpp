@@ -48,10 +48,6 @@ void line::clearLine(int row, int col, int lineLength) {
 }
 int line::size() {
     return length;
-   /* int count = 0;
-    for (int i = 0; Cs[i] != '\0'; i++)
-        count++;
-    return count;*/
 }
 void line::printline() {
     for (int i = 0; i < size(); i++)
@@ -75,16 +71,29 @@ void line::insertAt(int index, char sym) {
     length++;
 }
 
+//void line::deleteAt(int index) {
+//    if (index < 0 or index >= length)
+//        return;
+//
+//    for (int i = index; i < length - 1; i++)
+//        Cs[i] = Cs[i + 1];
+//
+//    Cs[length - 1] = '\0';
+//    length--;
+//}
+//
+
 void line::deleteAt(int index) {
-    if (index < 0 or index >= length)
+    if (index < 0 || index >= length || Cs == nullptr)
         return;
 
     for (int i = index; i < length - 1; i++)
         Cs[i] = Cs[i + 1];
 
-    Cs[length - 1] = '\0';
+    Cs[length - 1] = '\0'; 
     length--;
 }
+
 void line::deleteFrom(int index) {
     if (index < 0 or index >= length)
         return;
@@ -120,6 +129,8 @@ char line::getCharAt(int index) {
     return Cs[index];
 }
 void line::toggle(int index) {
+    if (index < 0 || index >= length || Cs == nullptr)
+        return;
 
     if (islower(Cs[index])) 
         Cs[index] = Cs[index] - 32;
@@ -151,7 +162,6 @@ line* line::splitLeft(int index) {
    
     return newLine;
 }
-
 line* line::splitRight(int index) {
     line* newLine = new line();
 
@@ -170,38 +180,63 @@ line* line::splitRight(int index) {
     return newLine;
 }
 
-int line::countDoubleEnter(line* lines[], int size) {
-    int count = 0;
-
-    for (int i = 0; i < size - 1; i++) {
-        if (lines[i]->isEmpty() && lines[i + 1]->isEmpty()) {
-            count++; 
-        }
-    }
-
-    return count;
-}
-
-
 void line::indent(int cursorColumn) {
-    if (cursorColumn < 0 or cursorColumn > length)
+    if (cursorColumn < 0 || cursorColumn > length)
         return;
 
-    char* newCs = new char[length + 2] {}; 
-
+    char* newCs = new char[length + 2]; 
     for (int i = 0; i < cursorColumn; i++)
         newCs[i] = Cs[i];
 
+   
     newCs[cursorColumn] = '\t';
 
+  
     for (int i = cursorColumn; i < length; i++)
         newCs[i + 1] = Cs[i];
 
+
     newCs[length + 1] = '\0';
 
+ 
     delete[] Cs;
     Cs = newCs;
-    length += 1;
+
+  
+    length++;
+}
+void line::unindent(int cursorColumn) {
+    const int tabSize = 4;
+
+    if (cursorColumn < tabSize)
+        return;
+
+    int spacesToRemove = 0;
+
+    
+    for (int i = 1; i <= length; i++) {
+        if (Cs[i] == '\t') {
+            {
+                for (int j = i;i-4>=0 and j -1 >= i - 4; j--) {
+                    Cs[j] = Cs[j - 1];
+               }
+            }
+        }
+    }
+
+  
+    if (spacesToRemove == 0)
+        return;
+
+   
+    for (int i = cursorColumn; i-1 >= cursorColumn-4; i--)
+        Cs[i] = Cs[i-1];
+
+    
+    Cs[length] = '\0';
+
+   
+    length -= spacesToRemove;
 }
 
 
