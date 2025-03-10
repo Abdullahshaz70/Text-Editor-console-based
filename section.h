@@ -25,7 +25,7 @@ class section
 	
 
 		int getParagraphSize(int lineindex);
-		
+		int getTotalLines();
         int getParagraphNumber(int cursorRow);
 		int getLineSize(int lineindex);
 		line* getLine(int index);
@@ -45,12 +45,16 @@ class section
 		void startOfLine(int lineIndex, int& columnIndex);
 		void endOfLine(int lineIndex, int& columnIndex);
 
-		void print();
+		void searchPattern(char* pattern, bool forward);
+		void moveToNextOccurrence();
+		void moveToPreviousOccurrence();
+		void searchAndReplace(const char* oldWord, const char* newWord);
+
+		void print(int i=0);
      
 		void Erase(int paragraphIndex);
 
 		void deleteline(int lineIndex);
-
 		void writeToFile(const char* filename) const;
 };
 

@@ -78,6 +78,13 @@ int section::getLineSize(int lineIndex) {
 
     return S[paraIndex]->getlinesize(lineIndex); 
 }
+int section::getTotalLines() {
+    int totalLines = 0;
+    for (int i = 0; i < S.size(); i++) {
+        totalLines += S[i]->paragraphSize();
+    }
+    return totalLines;
+}
 
 void section::deleteAt(int lineIndex, int columnIndex) {
     int paraIndex = getParagraphNumber(lineIndex); 
@@ -98,15 +105,18 @@ void section::deleteFrom(int lineIndex, int columnIndex) {
 }
 
 
-void section::print() {
-    for (int i = 0; i < S.size(); i++) {
+void section::print(int i) {
+    for ( i = 0; i < S.size(); i++) {
         if (S[i] != nullptr) {
             S[i]->printParagraph();
             cout << endl;
         }
+
             
     }
 }
+
+
 
 line* section::getLine(int index) {
     int paragraphIndex = getParagraphNumber(index);
@@ -115,14 +125,12 @@ line* section::getLine(int index) {
 
     return S[paragraphIndex]->getLine(index);
 }
-
-
-
 int section::getParagraphSize(int lineindex) {
 
     return S[getParagraphNumber(lineindex)]->paragraphSize();
 
 }
+
 
 int section::findnextword(int lineIndex, int columnIndex) {
   return  S[getParagraphNumber(lineIndex)]->findnextword(lineIndex, columnIndex);
@@ -130,8 +138,6 @@ int section::findnextword(int lineIndex, int columnIndex) {
 int section::findprevword(int lineIndex, int columnIndex) {
    return  S[getParagraphNumber(lineIndex)]->findprevword(lineIndex, columnIndex);
 }
-
-
 void section::startOfLine(int lineIndex, int& columnIndex) {
     S[getParagraphNumber(lineIndex) ]->startofline(lineIndex, columnIndex);
 }
@@ -139,13 +145,13 @@ void section::endOfLine(int lineIndex, int& columnIndex) {
     S[getParagraphNumber(lineIndex)]->endofline(lineIndex, columnIndex);
 }
 
+
 void section::copyLine(int lineIndex) {
     int paragraphIndex = getParagraphNumber(lineIndex);
     if (paragraphIndex < 0 || paragraphIndex >= S.size()) return;
 
     S[paragraphIndex]->CopyLine(*S[paragraphIndex], lineIndex);
 }
-
 void section::pasteLine(int lineIndex) {
     int paragraphIndex = getParagraphNumber(lineIndex) ;
     if (paragraphIndex < 0 || paragraphIndex >= S.size()) return;
@@ -163,7 +169,6 @@ void section::toggle(int lineindex, int index) {
 
     S[paraIndex]->Toggle(lineindex, index);
 }
-
 void section::indent(int lineIndex, int cursorColumn) {
     int paraIndex = getParagraphNumber(lineIndex);
 
@@ -171,7 +176,6 @@ void section::indent(int lineIndex, int cursorColumn) {
 
     S[paraIndex]->indent(lineIndex, cursorColumn);
 }
-
 void section::unindent(int lineIndex, int cursorColumn) {
     int paraIndex = getParagraphNumber(lineIndex) ; 
 
@@ -185,7 +189,7 @@ int section::sectionSize() {
 }
 
 void  section::Erase(int paragraphIndex) {
-    if (paragraphIndex < 0 || paragraphIndex >= S.size()) return;
+    if (paragraphIndex < 0 or paragraphIndex >= S.size()) return;
 
     delete S[paragraphIndex];
     S.erase(S.begin() + paragraphIndex);
@@ -198,15 +202,28 @@ void  section::deleteline(int lineIndex) {
     S[paraIndex]->deleteline(lineIndex);
 }
 
+void section::searchPattern(char* pattern, bool forward) {
+    if (!pattern || strsize(pattern) == 0) return;
 
-
-
-
-
-
-
-
-
+    for (int i = 0; i < S.size(); i++) {
+        S[i]->searchPattern(pattern, forward);
+    }
+}
+void section::moveToNextOccurrence() {
+    for (int i = 0; i < S.size(); i++) {
+        S[i]->moveToNextOccurrence();
+    }
+}
+void section::moveToPreviousOccurrence() {
+    for (int i = 0; i < S.size(); i++) {
+        S[i]->moveToPreviousOccurrence();
+    }
+}
+void section::searchAndReplace(const char* oldWord, const char* newWord) {
+    for (int i = 0; i < S.size(); i++) {
+        S[i]->searchAndReplace(oldWord, newWord);
+    }
+}
 
 
 void section::writeToFile(const char* filename) const {
@@ -214,51 +231,33 @@ void section::writeToFile(const char* filename) const {
     if (!outputFile.is_open())
         return;
 
-    outputFile << S.size() << endl; // Total paragraphs in this section
-
-    int enterCount = 0; // Track empty lines for section and chapter markers
+    outputFile << S.size() << endl; 
 
     for (int i = 0; i < S.size(); ++i) {
-        outputFile << S[i]->paragraphSize() << endl; // Number of lines in the paragraph
+        outputFile << "[PARAGRAPH]" << endl;  
+        outputFile << S[i]->paragraphSize() << endl; 
 
         for (int j = 0; j < S[i]->paragraphSize(); ++j) {
             const char* content = S[i]->getLine(j)->getContent();
 
-            if (content[0] == '#') {
-                outputFile << "[PARAGRAPH]" << endl;
+            if (content[0] == '\0') { 
+                outputFile << endl;
                 continue;
             }
 
-            if (content[0] == '\0') { // Empty line detected
-                enterCount++;
-                if (enterCount == 2) {
-                    outputFile << "[SECTION]" << endl;
-                    enterCount = 0;
-                    continue;
-                }
-                else if (enterCount == 3) {
-                    outputFile << "[CHAPTER]" << endl;
-                    enterCount = 0;
-                    continue;
-                }
-            }
-            else {
-                enterCount = 0; // Reset enter count if non-empty line
-            }
-
-            // Write line content with space and tab formatting
             for (int k = 0; content[k] != '\0'; ++k) {
                 if (content[k] == ' ')
-                    outputFile.put('_');
+                    outputFile.put('_'); 
                 else if (content[k] == '\t')
-                    outputFile << "[TAB]";
+                    outputFile << "[TAB]"; 
                 else
                     outputFile.put(content[k]);
             }
 
-            outputFile.put('\n'); // Move to next line
+            outputFile.put('\n');  
         }
     }
 
     outputFile.close();
 }
+

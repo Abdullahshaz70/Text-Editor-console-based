@@ -4,14 +4,14 @@
 #include "mode.h"
 #include "paragraph.h"
 #include"section.h"
-
+#include"chapter.h"
 using namespace std;
 #define MAX_LENGHT_LINE 10
-int cursorRow = 0, cursorColumn = 0;
-//line A;
-//paragraph P;
-section S;
-static int enterCount = 0;
+#define MAX_LENGHT_PAGE 20
+int cursorRow = 0, cursorColumn = 0 , x=0;
+
+//section S;
+chapter C;
 
 void modeChanges(char sym) {
     if (sym == 'i')
@@ -40,66 +40,108 @@ void modeChanges(char sym) {
 
 
 
+//void moveUp() {
+//    if (cursorRow > 0) {
+//        cursorRow--;
+//       
+//        if (cursorColumn > C.getLineSize(cursorRow)) {
+//            cursorColumn = C.getLineSize(cursorRow);
+//        }
+//    }
+//}
+//void moveLeft() {
+//    if (cursorColumn > 0) {
+//        cursorColumn--;
+//    }
+//    else if (cursorRow > 0) {  
+//        cursorRow--;
+//        cursorColumn = C.getLineSize(cursorRow);  
+//    }
+//}
+//void moveRight() {
+//    if (cursorColumn < C.getLineSize(cursorRow)) {
+//        cursorColumn++;
+//    }
+//    else if (cursorRow + 1 < C.getParagraphSize(cursorRow)) {  
+//        cursorRow++;
+//        cursorColumn = 0;
+//    }
+//}
+//void moveDown() {
+//    if (cursorRow + 1 < C.getParagraphSize(cursorRow)) {
+//        cursorRow++;
+//       
+//        if (cursorColumn > C.getLineSize(cursorRow)) {
+//            cursorColumn = C.getLineSize(cursorRow);
+//        }
+//    }
+//}
 void moveUp() {
     if (cursorRow > 0) {
         cursorRow--;
-       
-        if (cursorColumn > S.getLineSize(cursorRow)) {
-            cursorColumn = S.getLineSize(cursorRow);
+        int lineSize = C.getLineSize(cursorRow);
+        if (cursorColumn > lineSize) {
+            cursorColumn = lineSize;
         }
     }
 }
+
 void moveLeft() {
     if (cursorColumn > 0) {
         cursorColumn--;
     }
-    else if (cursorRow > 0) {  
+    else if (cursorRow > 0) {
         cursorRow--;
-        cursorColumn = S.getLineSize(cursorRow);  
+        cursorColumn = C.getLineSize(cursorRow);
     }
 }
+
 void moveRight() {
-    if (cursorColumn < S.getLineSize(cursorRow)) {
+    if (cursorColumn < C.getLineSize(cursorRow)) {
         cursorColumn++;
     }
-    else if (cursorRow + 1 < S.getParagraphSize(cursorRow)) {  
+    else if (cursorRow + 1 < C.getTotalLines()) {
         cursorRow++;
         cursorColumn = 0;
     }
 }
+
 void moveDown() {
-    if (cursorRow + 1 < S.getParagraphSize(cursorRow)) {
+    if (cursorRow + 1 < C.getTotalLines()) {
         cursorRow++;
-       
-        if (cursorColumn > S.getLineSize(cursorRow)) {
-            cursorColumn = S.getLineSize(cursorRow);
+        int lineSize = C.getLineSize(cursorRow);
+        if (cursorColumn > lineSize) {
+            cursorColumn = lineSize;
         }
     }
 }
 
+
 void backSpace() {
 
     if (cursorRow != 0 or cursorColumn != 0) {
-        S.deleteAt(cursorRow, cursorColumn - 1);
+
+        
+        C.deleteAt(cursorRow, cursorColumn - 1);
         cursorColumn--;
 
         if (cursorColumn < 0)
         {
             if (cursorRow != 0) {
                 cursorRow--;
-                cursorColumn = S.getLineSize(cursorRow);
+                cursorColumn = C.getLineSize(cursorRow);
 
-                if (S.getLineSize(cursorRow) == 0) {
+                if (C.getLineSize(cursorRow) == 0) {
 
 
-                    S.deleteline(cursorRow);
-                    S.Erase(cursorRow);
+                    C.deleteline(cursorRow);
+                    C.Erase(cursorRow);
 
                     system("cls");
                     if (cursorRow > 0) {
 
                         cursorRow--;
-                        cursorColumn = S.getLineSize(cursorRow);
+                        cursorColumn = C.getLineSize(cursorRow);
                     }
                     else
                         cursorColumn = 0;
@@ -113,7 +155,7 @@ void backSpace() {
 
         gotoRowCol(cursorRow, cursorColumn);
         cout << " ";
-        gotoRowCol(cursorRow, S.getLineSize(cursorRow));
+        gotoRowCol(cursorRow, C.getLineSize(cursorRow));
         cout << " ";
     }
 
@@ -121,11 +163,11 @@ void backSpace() {
 }
 void enter_Insertion() {
 
-    S.insertline(cursorRow, cursorColumn);
+    C.insertline(cursorRow, cursorColumn);
 
     cursorRow++;
     
-   if (cursorColumn >= S.getLineSize(cursorRow))
+   if (cursorColumn >= C.getLineSize(cursorRow))
         cursorColumn = 0;
 
     
@@ -136,7 +178,8 @@ void enter_Insertion() {
 int main() {
 
     normalMode = true;
-    S.addparagraph();
+    C.addSection();
+    //S.addparagraph();
 
     while (true) {
         if (_kbhit()) {
@@ -152,14 +195,14 @@ int main() {
                 case 9:
                     if (GetAsyncKeyState(VK_SHIFT)) {
                         if (cursorColumn - 4 >= 0) {
-                            S.unindent(cursorRow, cursorColumn);
+                            C.unindent(cursorRow, cursorColumn);
                             cursorColumn -= 4;
                             system("cls");
                         }
                     }
                     else {
                         if (cursorColumn + 4 < MAX_LENGHT_LINE) {
-                            S.indent(cursorRow, cursorColumn);
+                            C.indent(cursorRow, cursorColumn);
                             cursorColumn += 4;
                             system("cls");
 
@@ -186,26 +229,18 @@ int main() {
 
                 default:
                     if (cursorColumn >= MAX_LENGHT_LINE) {
-                        S.insertline(cursorRow, cursorColumn);
+                        C.insertline(cursorRow, cursorColumn);
                         cursorRow++;
                         cursorColumn = 0;
                     }
 
-                    S.insertAt(cursorRow, cursorColumn, sym);
+                    C.insertAt(cursorRow, cursorColumn, sym);
                     cursorColumn++;
                     break;
                 }
             }
             else if (normalMode) {
                 switch (sym) {
-                case'#':
-                    S.addparagraph();
-                    cursorColumn = 0;
-                    gotoRowCol(cursorRow, cursorColumn);
-                    break;
-                case 's':
-                    S.writeToFile("Text.txt");
-                    break;
                 case 'h':
                     moveLeft();
                     break;
@@ -219,69 +254,69 @@ int main() {
                     moveUp();
                     break;
                 case 'w':
-                    cursorColumn = S.findnextword(cursorRow, cursorColumn);
+                    cursorColumn = C.findNextWord(cursorRow, cursorColumn);
 
                     break;
                 case 'b':
-                    cursorColumn = S.findprevword(cursorRow, cursorColumn);
+                    cursorColumn = C.findPrevWord(cursorRow, cursorColumn);
 
                     break;
                 case 'd':
                     sym = _getch();
                     if (sym == 'd') {
 
-                        for (int i = 0; i < S.getLineSize(cursorRow); i++)
+                        for (int i = 0; i < C.getLineSize(cursorRow); i++)
                         {
                             gotoRowCol(cursorRow, i);
                             cout << " ";
                         }
-                        S.deleteFrom(cursorRow, 0);
+                        C.deletefrom(cursorRow, 0);
                         cursorColumn = 0;
                     }
                     break;
                 case 'D':
-                    for (int i = cursorColumn; i < S.getLineSize(cursorRow); i++)
+                    for (int i = cursorColumn; i < C.getLineSize(cursorRow); i++)
                     {
                         gotoRowCol(cursorRow, i);
                         cout << " ";
                     }
-                    S.deleteFrom(cursorRow, cursorColumn);
+                    C.deletefrom(cursorRow, cursorColumn);
                     break;
                 case 'x':
-                    S.deleteAt(cursorRow, cursorColumn);
+                    C.deleteAt(cursorRow, cursorColumn);
                     gotoRowCol(cursorRow, cursorColumn);
                     cout << " ";
-                    gotoRowCol(cursorRow, S.getLineSize(cursorRow));
+                    gotoRowCol(cursorRow, C.getLineSize(cursorRow));
                     cout << " ";
                     gotoRowCol(cursorRow, cursorColumn);
                     cout << " ";
                     break;
                 case '0':
-                    S.startOfLine(cursorRow, cursorColumn);
+                    C.startOfLine(cursorRow, cursorColumn);
                     gotoRowCol(cursorRow, cursorColumn);
                     break;
                 case '$':
-                    S.endOfLine(cursorRow, cursorColumn);
+                    C.endOfLine(cursorRow, cursorColumn);
                     gotoRowCol(cursorRow, cursorColumn);
                     break;
                 case 'y':
                     sym = _getch();
                     if (sym == 'y')
-                        S.copyLine(cursorRow);
+                        C.copyLine(cursorRow);
                     else
-                        S.print();
+                        C.print();
                     break;
 
                 case 'P':  
-                    S.addline(cursorRow);
-                    S.pasteLine(cursorRow);
+                    C.addLine(cursorRow);
+                    C.pasteLine(cursorRow);
                     cursorColumn = 0;
                     gotoRowCol(cursorRow, cursorColumn);
                     system("cls");
                     break;
 
                 case 'p':  
-                    S.pasteLine(cursorRow + 1);
+                    C.pasteLine(cursorRow);
                     cursorRow++;
                     cursorColumn = 0;
                     gotoRowCol(cursorRow, cursorColumn);
@@ -296,25 +331,91 @@ int main() {
                    
                     break;
                 case 126:
-                    S.toggle(cursorRow, cursorColumn);
+                    C.toggle(cursorRow, cursorColumn);
 
                     break;
 
                 case -32: 
                     sym = _getch();
                     if (sym == 83)
-                        S.deleteAt(cursorRow, cursorColumn + 1);
+                        C.deleteAt(cursorRow, cursorColumn + 1);
                     gotoRowCol(cursorRow, cursorColumn + 1);
                     cout << " ";
-                    gotoRowCol(cursorRow, S.getLineSize(cursorRow));
+                    gotoRowCol(cursorRow, C.getLineSize(cursorRow));
                     cout << " ";
 
                     break;
 
                 }
             }
+            else if (commandMode) {
+                
+                switch (sym) {
+                case 'w':
+                    sym = _getch();
+                    //S.writeToFile("Text.txt");
+
+                    if (sym == 'q')
+                        return 0; 
+
+                    break;
+
+                case 'q':
+                    sym = _getch();
+                    if (sym == '!')
+                        return 0; 
+                    return 0;  
+
+                case '/': {
+                    char searchPattern[100];
+                    cout << "Enter search pattern: ";
+                    cin >> searchPattern;
+                    C.searchPattern(searchPattern, true);  
+                    system("pause");
+                    system("cls");
+                    break;
+                }
+
+                case '?': {
+                    char searchPattern[100];
+                    cout << "Enter search pattern: ";
+                    cin >> searchPattern;
+                    C.searchPattern(searchPattern, false);
+                    system("pause");
+                    system("cls");
+                    break;
+                }
+
+                case 'n':
+                    C.moveToNextOccurrence();
+                    system("pause");
+                    system("cls");
+                    break;
+
+                case 'N':
+                    C.moveToPreviousOccurrence();
+                    system("pause");
+                    system("cls");
+                    break;
+
+                case 'F':
+                    char word[100];
+                    cout << "Enter word to be replaced: ";
+                    cin >> word;
+                    char newWord[100];
+                    cout << "Enter word to be replaced: ";
+                    cin >> newWord;
+                    C.searchAndReplace(word, newWord);
+                    system("pause");
+                    system("cls");
+                }
+
+            }
             gotoRowCol(0, 0);
-            S.print();
+        
+                C.print();
+          
+
             gotoRowCol(cursorRow, cursorColumn);
         }
     }

@@ -36,6 +36,9 @@
     <ClCompile Include="section.cpp">
       <Filter>Header Files\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="chapter.cpp">
+      <Filter>Header Files\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cursor.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="section.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="chapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bsai24082.cpp" />
+    <ClCompile Include="chapter.cpp" />
     <ClCompile Include="cursor.cpp" />
     <ClCompile Include="line.cpp" />
     <ClCompile Include="mode.cpp" />
@@ -28,6 +29,7 @@
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="chapter.h" />
     <ClInclude Include="cursor.h" />
     <ClInclude Include="line.h" />
     <ClInclude Include="mode.h" />

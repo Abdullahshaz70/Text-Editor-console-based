@@ -49,7 +49,6 @@ void paragraph::printLine(int lineIndex) {
 	P[lineIndex]->printline();
 
 }
-
 int paragraph::getlinesize(int lineIndx) {
 
 	return P[lineIndx]->size();
@@ -89,6 +88,7 @@ void paragraph::popBack() {
 	P.pop_back();
 }
 
+
 void paragraph::insertAt(int lineIndex, int columnIndex, char sym) {
 	if (lineIndex < 0 || lineIndex >= P.size())
 		return;
@@ -105,8 +105,6 @@ void paragraph::deleteAt(int lineIndex, int columnIndex) {
 
 	P[lineIndex]->deleteAt(columnIndex);
 }
-
-
 void paragraph::deletefrom(int lineIndex, int columnIndex) {
 	if (lineIndex < 0 or lineIndex > P.size())
 		return;
@@ -126,7 +124,6 @@ void paragraph::CopyLine(paragraph& P, int lineIndex) {
 	copyLine = new char[length + 1];  
 	stringcopy(copyLine, lineContent);  
 }
-
 void paragraph::pasteLine(int lineIndex) {
 	if (copyLine == nullptr) return;
 
@@ -154,6 +151,105 @@ bool paragraph::isLineEmpty(int lineIndex) {
 	return P[lineIndex]->isEmpty();
 }
 
+
+void  paragraph::searchPattern(char* pattern, bool forward) {
+	if (!pattern or strsize(pattern) == 0) return;
+
+	stringcopy(lastPattern, pattern);
+
+	int start = forward ? 0 : P.size() - 1;
+	int end = forward ? P.size() : -1;
+	int step = forward ? 1 : -1;
+
+	for (int i = start; i != end; i += step) {
+		if (wordFinder(P[i]->getContent(), pattern)) {
+			lastFoundIndex = i;
+			cout << "Found in Line " << i + 1 << ": " << P[i]->getContent() << endl;
+			return;
+		}
+	}
+
+	cout << "Pattern not found!\n";
+	lastFoundIndex = -1;
+}
+void  paragraph::moveToNextOccurrence() {
+
+	if (strsize(lastPattern) == 0 or lastFoundIndex == -1) {
+		cout << "No previous search!\n";
+		return;
+	}
+
+	for (int i = lastFoundIndex + 1; i < P.size(); ++i) {
+		if (wordFinder(P[i]->getContent(), lastPattern)) {
+			lastFoundIndex = i;
+			cout << "Next occurrence in Line " << i + 1 << ": " << P[i]->getContent() << endl;
+			return;
+		}
+	}
+
+	cout << "No more occurrences found!\n";
+}
+void  paragraph::moveToPreviousOccurrence() {
+	if (strsize(lastPattern) == 0 or lastFoundIndex == -1) {
+		cout << "No previous search!\n";
+		return;
+	}
+
+	for (int i = lastFoundIndex - 1; i >= 0; --i) {
+		if (wordFinder(P[i]->getContent(), lastPattern)) {
+			lastFoundIndex = i;
+			cout << "Previous occurrence in Line " << i + 1 << ": " << P[i]->getContent() << endl;
+			return;
+		}
+	}
+
+	cout << "No previous occurrences found!\n";
+}
+void paragraph::searchAndReplace(const char* oldWord, const char* newWord) {
+	int oldLen = 0, newLen = 0;
+
+
+	while (oldWord[oldLen] != '\0') oldLen++;
+	while (newWord[newLen] != '\0') newLen++;
+
+	for (int i = 0; i < P.size(); i++) {
+		line* currentLine = P[i];
+		int lineLength = currentLine->size();
+		const char* content = currentLine->getContent();
+
+
+		char* newContent = new char[lineLength * 2];
+		int newIndex = 0, j = 0;
+
+		while (j < lineLength) {
+			bool match = true;
+
+			for (int k = 0; k < oldLen; k++) {
+				if (content[j + k] == '\0' or content[j + k] != oldWord[k]) {
+					match = false;
+					break;
+				}
+			}
+
+
+			if (match) {
+				for (int k = 0; k < newLen; k++)
+					newContent[newIndex++] = newWord[k];
+
+				j += oldLen;
+			}
+			else {
+				newContent[newIndex++] = content[j++];
+			}
+		}
+
+		newContent[newIndex] = '\0';
+		P[i]->updateline(newContent);
+
+
+	}
+
+}
 
 void paragraph::writeToFile(const char* filename) const {
 	ofstream outputFile(filename);
@@ -199,8 +295,6 @@ void paragraph::writeToFile(const char* filename) const {
 
 	outputFile.close();
 }
-
-
 void paragraph::readfromfile(const char* filename) {
 	ifstream inputFile(filename);
 	if (!inputFile.is_open())
