@@ -1,6 +1,9 @@
 #pragma once
 #include"utility.h"
 #include<fstream>
+#include<iostream>
+using namespace std;
+
 
 class line {
     char* Cs;
@@ -68,6 +71,12 @@ public:
      length = newLength; 
  }
 
+ void printLine() {
+     for (int i = 0; i < size(); i++) {
+         cout << Cs[i];
+     }
+     cout << endl;  // Move to a new line after printing
+ }
 
  
 };

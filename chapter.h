@@ -71,7 +71,24 @@ public:
 		return content;
 	}
 
+	section* getSection(int sectionIndex) {
+		if (sectionIndex < 0 || sectionIndex >= C.size()) return nullptr;
+		return C[sectionIndex];
+	}
+
+
 	void clear();
-	void print(int i);
+	void print();
+
+	void printChapter() {
+		for (int i = 0; i < C.size(); i++) {
+			if (C[i] != nullptr) {
+				C[i]->printSection();
+			}
+		}
+		 // Separate chapters
+	}
+
+	//void print(int i);
 };
 

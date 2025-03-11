@@ -72,15 +72,10 @@ public:
     void printParagraph() {
         for (int i = 0; i < P.size(); ++i) {
             if (P[i] != nullptr) {
-                cout << P[i]->getContent(); 
-                cout << endl; 
+                P[i]->printLine();
             }
-            else if (P[i]->isEmpty()) {
-                cout <<" ";
-
-            }
-            
         }
+         // Separate paragraphs
     }
 
     char* getContent() const {

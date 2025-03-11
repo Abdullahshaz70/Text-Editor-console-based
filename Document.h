@@ -47,7 +47,17 @@ public:
 
     void writeToFile(const char* filenanme);
     //void readFromFile(const char* filenanme);
-    void print();
+    //void print();
+
+    void print() {
+        for (int i = 0; i < D.size(); i++) {
+            if (D[i] != nullptr) {
+                //cout << "=== Chapter " << i + 1 << " ===\n";
+                D[i]->printChapter();
+            }
+        }
+    }
+
 
     char* getContent() const {
         int totalSize = 0;
@@ -70,6 +80,29 @@ public:
         return content;
     }
 
+    void insertParagraph(int cursorRow) {
+        int chapterIndex = getChapterNumber(cursorRow);
+        if (chapterIndex < 0 || chapterIndex >= D.size()) return;
+
+        int sectionIndex = D[chapterIndex]->getSectionNumber(cursorRow);
+        if (sectionIndex < 0 || sectionIndex >= D[chapterIndex]->chapterSize()) return;
+
+        section* sec = D[chapterIndex]->getSection(sectionIndex);
+        if (sec) {
+            sec->addparagraph();
+        }
+    }
+
+    void insertSection(int cursorRow) {
+        int chapterIndex = getChapterNumber(cursorRow);
+        if (chapterIndex < 0 || chapterIndex >= D.size()) return;
+
+        D[chapterIndex]->addSection();
+    }
+
+    void insertChapter(int cursorRow) {
+        D.push_back(new chapter());
+    }
 
     void sectionSize(int lineIndex);
   

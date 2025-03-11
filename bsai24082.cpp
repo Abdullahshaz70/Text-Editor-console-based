@@ -7,7 +7,7 @@ using namespace std;
 #define MAX_LENGHT_LINE 80
 #define MAX_LENGHT_PAGE 30
 int cursorRow = 0, cursorColumn = 0 , x=0;
-
+int enterCount = 0;
 //section S;
 //chapter C;
 document D;
@@ -123,19 +123,50 @@ void backSpace() {
 
 }
 
+//void enter_Insertion() {
+//
+//    D.insertLine(cursorRow, cursorColumn);
+//
+//    cursorRow++;
+//    
+//   if (cursorColumn >= D.getLineSize(cursorRow))
+//        cursorColumn = 0;
+//
+//    
+//    gotoRowCol(cursorRow, cursorColumn);
+//}
+
 void enter_Insertion() {
+    enterCount++;  // Increment the enter count
 
-    D.insertLine(cursorRow, cursorColumn);
-
-    cursorRow++;
-    
-   if (cursorColumn >= D.getLineSize(cursorRow))
+    if (enterCount == 1) {
+        // Single enter → Insert a new line
+        D.insertLine(cursorRow, cursorColumn);
+        cursorRow++;
         cursorColumn = 0;
+    }
+    else if (enterCount == 2) {
+        // Two enters → New paragraph
+        D.insertParagraph(cursorRow);
+        cursorRow++;
+        cursorColumn = 0;
+    }
+    else if (enterCount == 3) {
+        // Three enters → New section
+        D.insertSection(cursorRow);
+        cursorRow++;
+        cursorColumn = 0;
+    }
+    else if (enterCount == 4) {
+        // Four enters → New chapter
+        D.addChapter();
+        cursorRow++;
+        cursorColumn = 0;
+        enterCount = 0;  // Reset counter after chapter insertion
+    }
 
-    
     gotoRowCol(cursorRow, cursorColumn);
 }
-
 
 int main() {
 
@@ -198,6 +229,7 @@ int main() {
 
                     D.insertAt(cursorRow, cursorColumn, sym);
                     cursorColumn++;
+                    enterCount = 0;
                     break;
                 }
             }
@@ -375,7 +407,9 @@ int main() {
             }
             gotoRowCol(0, 0);
         
-                D.print();
+
+
+            D.print();
           
 
             gotoRowCol(cursorRow, cursorColumn);

@@ -188,17 +188,7 @@ void document::searchAndReplace(const char* oldWord, const char* newWord) {
 //    }
 //}
 
-void document::print() {
-    //cout << "\n********** Document Start **********\n";
 
-    for (int i = 0; i < D.size(); i++) {
-        if (D[i] != nullptr) {
-            D[i]->print(i); 
-        }
-    }
-
-    //cout << "\n********** Document End **********\n";
-}
 
 void  document::sectionSize(int lineIndex) {
     D[getChapterNumber(lineIndex)]->chapterSize();
@@ -208,18 +198,18 @@ void  document::sectionSize(int lineIndex) {
 
 void document::writeToFile(const char* filename) {
     ofstream file(filename);
-    if (!file) return;  // Check if file opened successfully
+    if (!file) return;  
 
     for (int i = 0; i < D.size(); i++) {  // Loop through chapters
-        file << "\n\n\n\n";  // Chapter separator
+        if (i > 0) file << "\n\n\n\n";  // Chapter separator
 
         for (int j = 0; j < D[i]->chapterSize(); j++) {  // Loop through sections
-            file << "\n\n\n";  // Section separator
+            if (j > 0) file << "\n\n\n";  // Section separator
 
             for (int k = 0; k < D[i]->sectionsize(j); k++) {  // Loop through paragraphs
-                file << "\n\n";  // Paragraph separator
+                if (k > 0) file << "\n\n";  // Paragraph separator
 
-                for (int l = 0; l < D[i]->getPragraphSize(j); l++) {  // Loop through lines
+                for (int l = 0; l < D[i]->getPragraphSize(k); l++) {  // Loop through lines
                     file << D[i]->getContent() << "\n";  // Write line content
                 }
             }
@@ -228,6 +218,7 @@ void document::writeToFile(const char* filename) {
 
     file.close();  // Close file after writing
 }
+
 
 
 //void document::readFromFile(const char* filename) {
