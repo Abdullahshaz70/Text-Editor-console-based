@@ -49,6 +49,27 @@ public:
     //void readFromFile(const char* filenanme);
     void print();
 
+    char* getContent() const {
+        int totalSize = 0;
+        for (int i = 0; i < D.size(); i++) {
+            char* chapContent = D[i]->getContent();
+            totalSize += strsize(chapContent) + 4; // +4 for chapter separator "\n\n\n\n"
+            delete[] chapContent;
+        }
+
+        char* content = new char[totalSize + 1]; // Extra space for '\0'
+        content[0] = '\0';
+
+        for (int i = 0; i < D.size(); i++) {
+            char* chapContent = D[i]->getContent();
+            myStrcat(content, chapContent);
+            if (i < D.size() - 1) myStrcat(content, "\n\n\n\n"); // Separate chapters
+            delete[] chapContent;
+        }
+
+        return content;
+    }
+
 
     void sectionSize(int lineIndex);
   

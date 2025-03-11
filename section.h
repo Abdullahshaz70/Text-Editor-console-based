@@ -57,5 +57,28 @@ class section
 
 		void deleteline(int lineIndex);
 		void writeToFile(const char* filename) const;
+
+
+		char* getContent() const {
+			int totalSize = 0;
+			for (int i = 0; i < S.size(); i++) {
+				char* paraContent = S[i]->getContent();
+				totalSize += strsize(paraContent) + 2; // +2 for paragraph separator "\n\n"
+				delete[] paraContent;
+			}
+
+			char* content = new char[totalSize + 1]; // Extra space for '\0'
+			content[0] = '\0';
+
+			for (int i = 0; i < S.size(); i++) {
+				char* paraContent = S[i]->getContent();
+				myStrcat(content, paraContent);
+				if (i < S.size() - 1) myStrcat(content, "\n\n"); // Separate paragraphs
+				delete[] paraContent;
+			}
+
+			return content;
+		}
+
 };
 

@@ -83,6 +83,23 @@ public:
         }
     }
 
+    char* getContent() const {
+        int totalSize = 0;
+        for (int i = 0; i < P.size(); i++) {
+            totalSize += strsize(P[i]->getContent()) + 1; // +1 for newline or null terminator
+        }
+
+        char* content = new char[totalSize + 1]; // Extra space for '\0'
+        content[0] = '\0';
+
+        for (int i = 0; i < P.size(); i++) {
+            myStrcat(content, P[i]->getContent());
+            if (i < P.size() - 1) myStrcat(content, "\n"); // Separate lines
+        }
+
+        return content;  // Caller must delete[] this memory
+    }
+
 
     void Erase(int lineindex) {
         P.erase(P.begin() + lineindex);
@@ -100,9 +117,6 @@ public:
     void searchAndReplace(const char* oldWord, const char* newWord);
 
 
-    const char* paragraph::getcontent(int lineindex) const {
-        P[lineindex]->getCharAt();
-    }
 
 };
 

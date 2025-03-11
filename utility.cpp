@@ -72,6 +72,11 @@ void stringcopy(char* A, const char* B) {
 	A[i] = '\0'; 
 }
 
+void myStrcat(char* dest, const char* src) {
+	while (*dest) dest++;
+	while (*src) *dest++ = *src++;
+	*dest = '\0';
+}
 
 bool isDelimiter(char c) {
 	return (c == ' ' or c == '\t' or c == '\n' or c == '.' or c == ',' or

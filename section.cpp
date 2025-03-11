@@ -105,17 +105,26 @@ void section::deleteFrom(int lineIndex, int columnIndex) {
 }
 
 
-void section::print(int i) {
-    for ( i = 0; i < S.size(); i++) {
+//void section::print(int i) {
+//    for ( i = 0; i < S.size(); i++) {
+//        if (S[i] != nullptr) {
+//            S[i]->printParagraph();
+//            cout << endl;
+//        }
+//
+//            
+//    }
+//}
+void section::print(int sectionIndex) {
+    //cout << "  --- Section " << sectionIndex + 1 << " ---\n";
+
+    for (int i = 0; i < S.size(); i++) {
         if (S[i] != nullptr) {
             S[i]->printParagraph();
-            cout << endl;
         }
-
-            
     }
+    cout << endl; 
 }
-
 
 
 line* section::getLine(int index) {

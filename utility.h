@@ -14,5 +14,7 @@ void stringcopy(char* destination, const char* source);
 bool isDelimiter(char c);
 
 
+void myStrcat(char* dest, const char* src);
+
 bool wordFinder(char const* S1, char const* S2);
 

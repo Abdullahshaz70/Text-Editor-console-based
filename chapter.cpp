@@ -203,12 +203,21 @@ line* chapter::getline(int lineindex) {
    return C[getSectionNumber(lineindex)]->getLine(lineindex);
 }
 
-void chapter:: print() {
+//void chapter:: print() {
+//    for (int i = 0; i < C.size(); i++) {
+//        if (C[i] != nullptr) {
+//            C[i]->print(i); 
+//            cout << endl;
+//        }
+//    }
+//}
+
+void chapter::print(int chapterIndex) {
+    //cout << "\n======= Chapter " << chapterIndex + 1 << " =======\n";
+
     for (int i = 0; i < C.size(); i++) {
         if (C[i] != nullptr) {
             C[i]->print(i); 
-            cout << endl;
         }
     }
 }
-
