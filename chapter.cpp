@@ -1,6 +1,8 @@
 #include "chapter.h"
 
-chapter::chapter() {}
+chapter::chapter() {
+    addSection();
+}
 chapter::~chapter(){
 	for (section* p : C)
 		delete p;
@@ -25,7 +27,9 @@ void chapter::clear() {
 	C.clear();
 }
 
-
+int chapter::sectionsize(int lineIndex) {
+    return C[getSectionNumber(lineIndex)]->sectionSize();
+}
 
 void chapter::deleteAt(int lineIndex, int columnIndex) {
     int secIndex = getSectionNumber(lineIndex);
@@ -190,7 +194,14 @@ void chapter::searchAndReplace(const char* oldWord, const char* newWord) {
     }
 }
 
+int chapter::getPragraphSize(int lineIndex) {
+   return C[getSectionNumber(lineIndex)]->getParagraphSize(lineIndex);
+}
 
+
+line* chapter::getline(int lineindex) {
+   return C[getSectionNumber(lineindex)]->getLine(lineindex);
+}
 
 void chapter:: print() {
     for (int i = 0; i < C.size(); i++) {

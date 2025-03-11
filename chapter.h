@@ -15,6 +15,7 @@ public:
 	void addSection(section A);
 	void addLine(int cursorRow);
 
+	int sectionsize(int lineIndex);
 
 	void insertline(int lineIndex, int columnIndex);
 	void insertAt(int lineIndex, int columnIndex, char sym);
@@ -34,7 +35,8 @@ public:
 	int getSectionNumber(int lineIndex);
 	int getLineSize(int lineIndex);
 	int getTotalLines();
-
+	int getPragraphSize(int lineIndex);
+	line* getline(int lineindex);
 
 	void copyLine(int lineIndex);
 	void pasteLine(int lineIndex);

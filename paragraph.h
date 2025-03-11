@@ -93,21 +93,6 @@ public:
     }
 
 
-    paragraph& operator=(const paragraph& other) {
-        if (this != &other) { 
-            for (int i = 0; i < P.size(); i++) {
-                delete P[i];
-            }
-            P.clear();
-
-          
-            for (int i = 0; i < other.P.size(); i++) {
-                P.push_back(new line(*other.P[i])); \
-            }
-        }
-        return *this;
-    }
-  
 
     void searchPattern(char* pattern, bool forward);
     void moveToNextOccurrence();
@@ -115,6 +100,9 @@ public:
     void searchAndReplace(const char* oldWord, const char* newWord);
 
 
+    const char* paragraph::getcontent(int lineindex) const {
+        P[lineindex]->getCharAt();
+    }
 
 };
 

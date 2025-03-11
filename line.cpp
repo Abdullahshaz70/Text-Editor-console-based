@@ -71,17 +71,7 @@ void line::insertAt(int index, char sym) {
     length++;
 }
 
-//void line::deleteAt(int index) {
-//    if (index < 0 or index >= length)
-//        return;
-//
-//    for (int i = index; i < length - 1; i++)
-//        Cs[i] = Cs[i + 1];
-//
-//    Cs[length - 1] = '\0';
-//    length--;
-//}
-//
+
 
 void line::deleteAt(int index) {
     if (index < 0 || index >= length || Cs == nullptr)

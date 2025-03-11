@@ -52,6 +52,7 @@ class section
 
 		void print(int i=0);
      
+
 		void Erase(int paragraphIndex);
 
 		void deleteline(int lineIndex);

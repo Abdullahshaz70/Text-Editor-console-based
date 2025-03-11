@@ -2,16 +2,15 @@
 #include <iostream>
 #include <conio.h>
 #include "mode.h"
-#include "paragraph.h"
-#include"section.h"
-#include"chapter.h"
+#include"Document.h"
 using namespace std;
-#define MAX_LENGHT_LINE 10
-#define MAX_LENGHT_PAGE 20
+#define MAX_LENGHT_LINE 80
+#define MAX_LENGHT_PAGE 30
 int cursorRow = 0, cursorColumn = 0 , x=0;
 
 //section S;
-chapter C;
+//chapter C;
+document D;
 
 void modeChanges(char sym) {
     if (sym == 'i')
@@ -39,47 +38,10 @@ void modeChanges(char sym) {
 
 
 
-
-//void moveUp() {
-//    if (cursorRow > 0) {
-//        cursorRow--;
-//       
-//        if (cursorColumn > C.getLineSize(cursorRow)) {
-//            cursorColumn = C.getLineSize(cursorRow);
-//        }
-//    }
-//}
-//void moveLeft() {
-//    if (cursorColumn > 0) {
-//        cursorColumn--;
-//    }
-//    else if (cursorRow > 0) {  
-//        cursorRow--;
-//        cursorColumn = C.getLineSize(cursorRow);  
-//    }
-//}
-//void moveRight() {
-//    if (cursorColumn < C.getLineSize(cursorRow)) {
-//        cursorColumn++;
-//    }
-//    else if (cursorRow + 1 < C.getParagraphSize(cursorRow)) {  
-//        cursorRow++;
-//        cursorColumn = 0;
-//    }
-//}
-//void moveDown() {
-//    if (cursorRow + 1 < C.getParagraphSize(cursorRow)) {
-//        cursorRow++;
-//       
-//        if (cursorColumn > C.getLineSize(cursorRow)) {
-//            cursorColumn = C.getLineSize(cursorRow);
-//        }
-//    }
-//}
 void moveUp() {
     if (cursorRow > 0) {
         cursorRow--;
-        int lineSize = C.getLineSize(cursorRow);
+        int lineSize = D.getLineSize(cursorRow);
         if (cursorColumn > lineSize) {
             cursorColumn = lineSize;
         }
@@ -92,56 +54,55 @@ void moveLeft() {
     }
     else if (cursorRow > 0) {
         cursorRow--;
-        cursorColumn = C.getLineSize(cursorRow);
+        cursorColumn = D.getLineSize(cursorRow);
     }
 }
 
 void moveRight() {
-    if (cursorColumn < C.getLineSize(cursorRow)) {
+    if (cursorColumn < D.getLineSize(cursorRow)) {
         cursorColumn++;
     }
-    else if (cursorRow + 1 < C.getTotalLines()) {
+    else if (cursorRow + 1 < D.getTotalLines()) {
         cursorRow++;
         cursorColumn = 0;
     }
 }
 
 void moveDown() {
-    if (cursorRow + 1 < C.getTotalLines()) {
+    if (cursorRow + 1 < D.getTotalLines()) {
         cursorRow++;
-        int lineSize = C.getLineSize(cursorRow);
+        int lineSize = D.getLineSize(cursorRow);
         if (cursorColumn > lineSize) {
             cursorColumn = lineSize;
         }
     }
 }
 
-
 void backSpace() {
 
     if (cursorRow != 0 or cursorColumn != 0) {
 
         
-        C.deleteAt(cursorRow, cursorColumn - 1);
+        D.deleteAt(cursorRow, cursorColumn - 1);
         cursorColumn--;
 
         if (cursorColumn < 0)
         {
             if (cursorRow != 0) {
                 cursorRow--;
-                cursorColumn = C.getLineSize(cursorRow);
+                cursorColumn = D.getLineSize(cursorRow);
 
-                if (C.getLineSize(cursorRow) == 0) {
+                if (D.getLineSize(cursorRow) == 0) {
 
 
-                    C.deleteline(cursorRow);
-                    C.Erase(cursorRow);
+                    D.deleteLine(cursorRow);
+                    D.Erase(cursorRow);
 
                     system("cls");
                     if (cursorRow > 0) {
 
                         cursorRow--;
-                        cursorColumn = C.getLineSize(cursorRow);
+                        cursorColumn = D.getLineSize(cursorRow);
                     }
                     else
                         cursorColumn = 0;
@@ -155,19 +116,20 @@ void backSpace() {
 
         gotoRowCol(cursorRow, cursorColumn);
         cout << " ";
-        gotoRowCol(cursorRow, C.getLineSize(cursorRow));
+        gotoRowCol(cursorRow, D.getLineSize(cursorRow));
         cout << " ";
     }
 
 
 }
+
 void enter_Insertion() {
 
-    C.insertline(cursorRow, cursorColumn);
+    D.insertLine(cursorRow, cursorColumn);
 
     cursorRow++;
     
-   if (cursorColumn >= C.getLineSize(cursorRow))
+   if (cursorColumn >= D.getLineSize(cursorRow))
         cursorColumn = 0;
 
     
@@ -178,8 +140,8 @@ void enter_Insertion() {
 int main() {
 
     normalMode = true;
-    C.addSection();
-    //S.addparagraph();
+    D.addChapter();
+  
 
     while (true) {
         if (_kbhit()) {
@@ -195,14 +157,14 @@ int main() {
                 case 9:
                     if (GetAsyncKeyState(VK_SHIFT)) {
                         if (cursorColumn - 4 >= 0) {
-                            C.unindent(cursorRow, cursorColumn);
+                            D.unindent(cursorRow, cursorColumn);
                             cursorColumn -= 4;
                             system("cls");
                         }
                     }
                     else {
                         if (cursorColumn + 4 < MAX_LENGHT_LINE) {
-                            C.indent(cursorRow, cursorColumn);
+                            D.indent(cursorRow, cursorColumn);
                             cursorColumn += 4;
                             system("cls");
 
@@ -229,12 +191,12 @@ int main() {
 
                 default:
                     if (cursorColumn >= MAX_LENGHT_LINE) {
-                        C.insertline(cursorRow, cursorColumn);
+                        D.insertLine(cursorRow, cursorColumn);
                         cursorRow++;
                         cursorColumn = 0;
                     }
 
-                    C.insertAt(cursorRow, cursorColumn, sym);
+                    D.insertAt(cursorRow, cursorColumn, sym);
                     cursorColumn++;
                     break;
                 }
@@ -254,69 +216,69 @@ int main() {
                     moveUp();
                     break;
                 case 'w':
-                    cursorColumn = C.findNextWord(cursorRow, cursorColumn);
+                    cursorColumn = D.findNextWord(cursorRow, cursorColumn);
 
                     break;
                 case 'b':
-                    cursorColumn = C.findPrevWord(cursorRow, cursorColumn);
+                    cursorColumn = D.findPrevWord(cursorRow, cursorColumn);
 
                     break;
                 case 'd':
                     sym = _getch();
                     if (sym == 'd') {
 
-                        for (int i = 0; i < C.getLineSize(cursorRow); i++)
+                        for (int i = 0; i < D.getLineSize(cursorRow); i++)
                         {
                             gotoRowCol(cursorRow, i);
                             cout << " ";
                         }
-                        C.deletefrom(cursorRow, 0);
+                        D.deleteFrom(cursorRow, 0);
                         cursorColumn = 0;
                     }
                     break;
                 case 'D':
-                    for (int i = cursorColumn; i < C.getLineSize(cursorRow); i++)
+                    for (int i = cursorColumn; i < D.getLineSize(cursorRow); i++)
                     {
                         gotoRowCol(cursorRow, i);
                         cout << " ";
                     }
-                    C.deletefrom(cursorRow, cursorColumn);
+                    D.deleteFrom(cursorRow, cursorColumn);
                     break;
                 case 'x':
-                    C.deleteAt(cursorRow, cursorColumn);
+                    D.deleteAt(cursorRow, cursorColumn);
                     gotoRowCol(cursorRow, cursorColumn);
                     cout << " ";
-                    gotoRowCol(cursorRow, C.getLineSize(cursorRow));
+                    gotoRowCol(cursorRow, D.getLineSize(cursorRow));
                     cout << " ";
                     gotoRowCol(cursorRow, cursorColumn);
                     cout << " ";
                     break;
                 case '0':
-                    C.startOfLine(cursorRow, cursorColumn);
+                    D.startOfLine(cursorRow, cursorColumn);
                     gotoRowCol(cursorRow, cursorColumn);
                     break;
                 case '$':
-                    C.endOfLine(cursorRow, cursorColumn);
+                    D.endOfLine(cursorRow, cursorColumn);
                     gotoRowCol(cursorRow, cursorColumn);
                     break;
                 case 'y':
                     sym = _getch();
                     if (sym == 'y')
-                        C.copyLine(cursorRow);
+                        D.copyLine(cursorRow);
                     else
-                        C.print();
+                        D.print();
                     break;
 
                 case 'P':  
-                    C.addLine(cursorRow);
-                    C.pasteLine(cursorRow);
+                    D.addLine(cursorRow);
+                    D.pasteLine(cursorRow);
                     cursorColumn = 0;
                     gotoRowCol(cursorRow, cursorColumn);
                     system("cls");
                     break;
 
                 case 'p':  
-                    C.pasteLine(cursorRow);
+                    D.pasteLine(cursorRow);
                     cursorRow++;
                     cursorColumn = 0;
                     gotoRowCol(cursorRow, cursorColumn);
@@ -331,17 +293,17 @@ int main() {
                    
                     break;
                 case 126:
-                    C.toggle(cursorRow, cursorColumn);
+                    D.toggle(cursorRow, cursorColumn);
 
                     break;
 
                 case -32: 
                     sym = _getch();
                     if (sym == 83)
-                        C.deleteAt(cursorRow, cursorColumn + 1);
+                        D.deleteAt(cursorRow, cursorColumn + 1);
                     gotoRowCol(cursorRow, cursorColumn + 1);
                     cout << " ";
-                    gotoRowCol(cursorRow, C.getLineSize(cursorRow));
+                    gotoRowCol(cursorRow, D.getLineSize(cursorRow));
                     cout << " ";
 
                     break;
@@ -353,7 +315,7 @@ int main() {
                 switch (sym) {
                 case 'w':
                     sym = _getch();
-                    //S.writeToFile("Text.txt");
+                    D.writeToFile("Text.txt");
 
                     if (sym == 'q')
                         return 0; 
@@ -370,7 +332,7 @@ int main() {
                     char searchPattern[100];
                     cout << "Enter search pattern: ";
                     cin >> searchPattern;
-                    C.searchPattern(searchPattern, true);  
+                    D.searchPattern(searchPattern, true);  
                     system("pause");
                     system("cls");
                     break;
@@ -380,20 +342,20 @@ int main() {
                     char searchPattern[100];
                     cout << "Enter search pattern: ";
                     cin >> searchPattern;
-                    C.searchPattern(searchPattern, false);
+                    D.searchPattern(searchPattern, false);
                     system("pause");
                     system("cls");
                     break;
                 }
 
                 case 'n':
-                    C.moveToNextOccurrence();
+                    D.moveToNextOccurrence();
                     system("pause");
                     system("cls");
                     break;
 
                 case 'N':
-                    C.moveToPreviousOccurrence();
+                    D.moveToPreviousOccurrence();
                     system("pause");
                     system("cls");
                     break;
@@ -405,7 +367,7 @@ int main() {
                     char newWord[100];
                     cout << "Enter word to be replaced: ";
                     cin >> newWord;
-                    C.searchAndReplace(word, newWord);
+                    D.searchAndReplace(word, newWord);
                     system("pause");
                     system("cls");
                 }
@@ -413,7 +375,7 @@ int main() {
             }
             gotoRowCol(0, 0);
         
-                C.print();
+                D.print();
           
 
             gotoRowCol(cursorRow, cursorColumn);
