@@ -115,23 +115,24 @@ void paragraph::popBack() {
 void paragraph::insertAt(int lineIndex, int columnIndex, char sym) {
 	if (lineIndex < 0) return;
 
-	// Ensure the vector has enough lines
+	
+
 	while (lineIndex >= P.size()) {
-		P.push_back(new line());  // Allocate new lines safely
+		P.push_back(new line());  
 	}
 
-	// Ensure P[lineIndex] is not nullptr before accessing it
+	
 	if (!P[lineIndex]) {
 		P[lineIndex] = new line();
 	}
 
-	// Validate column index safely
+	
 	int maxColumn = (P[lineIndex] ? P[lineIndex]->size() : 0);
 	if (columnIndex > maxColumn) {
 		columnIndex = maxColumn;
 	}
 
-	// Insert character in the line
+
 	P[lineIndex]->insertAt(columnIndex, sym);
 }
 

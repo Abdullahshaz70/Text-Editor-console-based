@@ -56,9 +56,10 @@ class section
 			for (int i = 0; i < S.size(); i++) {
 				if (S[i] != nullptr) {
 					S[i]->printParagraph();
+					
 				}
 			}
-			
+		
 		}
 
 
@@ -72,22 +73,32 @@ class section
 			int totalSize = 0;
 			for (int i = 0; i < S.size(); i++) {
 				char* paraContent = S[i]->getContent();
-				totalSize += strsize(paraContent) + 2; // +2 for paragraph separator "\n\n"
+				totalSize += strsize(paraContent) + 2; 
 				delete[] paraContent;
 			}
 
-			char* content = new char[totalSize + 1]; // Extra space for '\0'
+			char* content = new char[totalSize + 1];
 			content[0] = '\0';
 
 			for (int i = 0; i < S.size(); i++) {
 				char* paraContent = S[i]->getContent();
 				myStrcat(content, paraContent);
-				if (i < S.size() - 1) myStrcat(content, "\n\n"); // Separate paragraphs
+				if (i < S.size() - 1) myStrcat(content, "\n\n"); 
 				delete[] paraContent;
 			}
 
 			return content;
 		}
+
+		bool isLineEmpty(int lineIndex) {
+			for (int i = 0; i < S.size(); i++) { 
+				if (!S[i]->isLineEmpty(lineIndex)) {
+					return false;  
+				}
+			}
+			return true;  
+		}
+
 
 };
 

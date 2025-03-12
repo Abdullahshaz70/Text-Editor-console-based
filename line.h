@@ -73,9 +73,9 @@ public:
 
  void printLine() {
      for (int i = 0; i < size(); i++) {
-         cout << Cs[i];
+         cout << Cs[i] ;
      }
-     cout << endl;  // Move to a new line after printing
+ 
  }
 
  

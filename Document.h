@@ -46,16 +46,14 @@ public:
     void searchAndReplace(const char* oldWord, const char* newWord);
 
     void writeToFile(const char* filenanme);
-    //void readFromFile(const char* filenanme);
-    //void print();
-
+  
     void print() {
         for (int i = 0; i < D.size(); i++) {
             if (D[i] != nullptr) {
-                //cout << "=== Chapter " << i + 1 << " ===\n";
                 D[i]->printChapter();
             }
         }
+        cout << endl << endl << endl;
     }
 
 
@@ -105,5 +103,19 @@ public:
     }
 
     void sectionSize(int lineIndex);
+
+    bool isLineEmpty(int lineIndex) {
+        for (int i = 0; i < D.size(); i++) {  
+            if (!D[i]->isLineEmpty(lineIndex)) {
+                return false;  
+            }
+        }
+        return true; 
+    }
+
+    void addSection(int lineIndex) {
+
+        D[getChapterNumber(lineIndex)]->addSection();
+    }
   
 };

@@ -86,9 +86,19 @@ public:
 				C[i]->printSection();
 			}
 		}
-		 // Separate chapters
+		cout << endl << endl;
 	}
 
-	//void print(int i);
+	bool isLineEmpty(int lineIndex) {
+		for (int i = 0; i < C.size(); i++) { 
+			if (!C[i]->isLineEmpty(lineIndex)) {
+				return false; 
+			}
+		}
+		return true;  
+	}
+
+	
+
 };
 

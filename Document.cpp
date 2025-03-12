@@ -200,23 +200,22 @@ void document::writeToFile(const char* filename) {
     ofstream file(filename);
     if (!file) return;  
 
-    for (int i = 0; i < D.size(); i++) {  // Loop through chapters
-        if (i > 0) file << "\n\n\n\n";  // Chapter separator
+    for (int i = 0; i < D.size(); i++) {  
+        if (i > 0) file << "\n\n\n\n";  
 
-        for (int j = 0; j < D[i]->chapterSize(); j++) {  // Loop through sections
-            if (j > 0) file << "\n\n\n";  // Section separator
+        for (int j = 0; j < D[i]->chapterSize(); j++) { 
 
-            for (int k = 0; k < D[i]->sectionsize(j); k++) {  // Loop through paragraphs
-                if (k > 0) file << "\n\n";  // Paragraph separator
+            for (int k = 0; k < D[i]->sectionsize(j); k++) {  
+                if (k > 0) file << "\n\n";  
 
-                for (int l = 0; l < D[i]->getPragraphSize(k); l++) {  // Loop through lines
-                    file << D[i]->getContent() << "\n";  // Write line content
+                for (int l = 0; l < D[i]->getPragraphSize(k); l++) {  
+                    file << D[i]->getContent() << "\n";  
                 }
             }
         }
     }
 
-    file.close();  // Close file after writing
+    file.close();  
 }
 
 

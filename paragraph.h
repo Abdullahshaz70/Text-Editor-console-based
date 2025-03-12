@@ -73,26 +73,28 @@ public:
         for (int i = 0; i < P.size(); ++i) {
             if (P[i] != nullptr) {
                 P[i]->printLine();
+                cout << endl;
             }
+       
         }
-         // Separate paragraphs
+        
     }
 
     char* getContent() const {
         int totalSize = 0;
         for (int i = 0; i < P.size(); i++) {
-            totalSize += strsize(P[i]->getContent()) + 1; // +1 for newline or null terminator
+            totalSize += strsize(P[i]->getContent()) + 1;
         }
 
-        char* content = new char[totalSize + 1]; // Extra space for '\0'
+        char* content = new char[totalSize + 1]; 
         content[0] = '\0';
 
         for (int i = 0; i < P.size(); i++) {
             myStrcat(content, P[i]->getContent());
-            if (i < P.size() - 1) myStrcat(content, "\n"); // Separate lines
+            if (i < P.size() - 1) myStrcat(content, "\n");
         }
 
-        return content;  // Caller must delete[] this memory
+        return content;
     }
 
 
