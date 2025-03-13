@@ -71,7 +71,12 @@ void line::insertAt(int index, char sym) {
     length++;
 }
 
+void line::printLine() {
+    for (int i = 0; i < size(); i++) {
+        cout << Cs[i];
+    }
 
+}
 
 void line::deleteAt(int index) {
     if (index < 0 || index >= length || Cs == nullptr)

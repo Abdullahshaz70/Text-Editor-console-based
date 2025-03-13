@@ -53,20 +53,12 @@ public:
 
 
 	void writeToFile(const char* filename) const; 
-    void readfromfile(const char* filename);
 
     void popBack();
     bool isLineEmpty(int lineIndex); 
 
-    void indent(int lineIndex,int cursorColumn) {
-        
-        P[lineIndex]->indent(cursorColumn);
-    }
-
-    void unindent(int lineIndex, int cursorColumn) {
-
-        P[lineIndex]->unindent(cursorColumn);
-    }
+    void indent(int lineIndex, int cursorColumn);
+    void unindent(int lineIndex, int cursorColumn);
 
     
     void printParagraph() {
@@ -80,31 +72,12 @@ public:
         
     }
 
-    char* getContent() const {
-        int totalSize = 0;
-        for (int i = 0; i < P.size(); i++) {
-            totalSize += strsize(P[i]->getContent()) + 1;
-        }
-
-        char* content = new char[totalSize + 1]; 
-        content[0] = '\0';
-
-        for (int i = 0; i < P.size(); i++) {
-            myStrcat(content, P[i]->getContent());
-            if (i < P.size() - 1) myStrcat(content, "\n");
-        }
-
-        return content;
-    }
-
-
+    char* getContent() const;
     void Erase(int lineindex) {
         P.erase(P.begin() + lineindex);
     }
 
-    void deleteline(int lineIndex) {
-        P[lineIndex]->clear();
-    }
+    void deleteline(int lineIndex);
 
 
 

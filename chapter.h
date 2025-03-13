@@ -50,53 +50,16 @@ public:
 	void moveToPreviousOccurrence();
 	void searchAndReplace(const char* oldWord, const char* newWord);
 
-	char* getContent() const {
-		int totalSize = 0;
-		for (int i = 0; i < C.size(); i++) {
-			char* secContent = C[i]->getContent();
-			totalSize += strsize(secContent) + 3; // +3 for section separator "\n\n\n"
-			delete[] secContent;
-		}
+	char* getContent() const;
 
-		char* content = new char[totalSize + 1]; // Extra space for '\0'
-		content[0] = '\0';
-
-		for (int i = 0; i < C.size(); i++) {
-			char* secContent = C[i]->getContent();
-			myStrcat(content, secContent);
-			if (i < C.size() - 1) myStrcat(content, "\n\n\n"); // Separate sections
-			delete[] secContent;
-		}
-
-		return content;
-	}
-
-	section* getSection(int sectionIndex) {
-		if (sectionIndex < 0 || sectionIndex >= C.size()) return nullptr;
-		return C[sectionIndex];
-	}
-
+	section* getSection(int sectionIndex);
 
 	void clear();
 	void print();
 
-	void printChapter() {
-		for (int i = 0; i < C.size(); i++) {
-			if (C[i] != nullptr) {
-				C[i]->printSection();
-			}
-		}
-		cout << endl << endl;
-	}
+	void printChapter();
 
-	bool isLineEmpty(int lineIndex) {
-		for (int i = 0; i < C.size(); i++) { 
-			if (!C[i]->isLineEmpty(lineIndex)) {
-				return false; 
-			}
-		}
-		return true;  
-	}
+	bool isLineEmpty(int lineIndex);
 
 	
 

@@ -88,30 +88,7 @@ void paragraph::popBack() {
 	P.pop_back();
 }
 
-//
-//void paragraph::insertAt(int lineIndex, int columnIndex, char sym) {
-//	if (lineIndex < 0 || lineIndex >= P.size())
-//		return;
-//
-//	if (columnIndex > P[lineIndex]->size())
-//		columnIndex = P[lineIndex]->size();
-//
-//	P[lineIndex]->insertAt(columnIndex, sym);
-//}
-//void paragraph::insertAt(int lineIndex, int columnIndex, char sym) {
-//	if (lineIndex < 0) return;  
-//
-//	if (lineIndex >= P.size()) {
-//		P.push_back(new line());
-//	}
-//
-//	
-//	if (columnIndex > P[lineIndex]->size()) {
-//		columnIndex = P[lineIndex]->size();
-//	}
-//
-//	P[lineIndex]->insertAt(columnIndex, sym);
-//}
+
 void paragraph::insertAt(int lineIndex, int columnIndex, char sym) {
 	if (lineIndex < 0) return;
 
@@ -334,40 +311,36 @@ void paragraph::writeToFile(const char* filename) const {
 
 	outputFile.close();
 }
-void paragraph::readfromfile(const char* filename) {
-	ifstream inputFile(filename);
-	if (!inputFile.is_open())
-		return;
 
-	P.clear(); 
-	char A[20];
-	int Lsize=0,Csize=0 ,j=0 , k =0;
-	inputFile >> Lsize;
-	char sym;
-	int temp ;
-	while (j < Lsize) {
-		temp = 0;
-		k = 0;
-		inputFile >> Csize;
-		
-		while (k<Csize) {
-
-			inputFile >> sym;
-
-			if (sym != '*')
-				A[temp++] = sym;
-			else
-				A[temp++] = ' ';
-
-			inputFile >> sym;
-
-			k++;
-		}
-
-		line* newLine = new line(A); 
-		P.push_back(newLine);
-		
-		j++;
+char* paragraph::getContent() const {
+	int totalSize = 0;
+	for (int i = 0; i < P.size(); i++) {
+		totalSize += strsize(P[i]->getContent()) + 1;  // 1 for '\n'
 	}
-	inputFile.close();
+
+	char* content = new char[totalSize + 1];
+	content[0] = '\0';
+
+	for (int i = 0; i < P.size(); i++) {
+		myStrcat(content, P[i]->getContent());
+		if (i < P.size() - 1) myStrcat(content, "\n");
+	}
+
+	return content;
+}
+
+void paragraph::deleteline(int lineIndex) {
+	P[lineIndex]->clear();
+}
+
+
+
+void  paragraph::indent(int lineIndex, int cursorColumn) {
+
+	P[lineIndex]->indent(cursorColumn);
+}
+
+void paragraph::unindent(int lineIndex, int cursorColumn) {
+
+	P[lineIndex]->unindent(cursorColumn);
 }

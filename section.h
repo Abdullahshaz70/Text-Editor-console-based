@@ -69,26 +69,7 @@ class section
 		void writeToFile(const char* filename) const;
 
 
-		char* getContent() const {
-			int totalSize = 0;
-			for (int i = 0; i < S.size(); i++) {
-				char* paraContent = S[i]->getContent();
-				totalSize += strsize(paraContent) + 2; 
-				delete[] paraContent;
-			}
-
-			char* content = new char[totalSize + 1];
-			content[0] = '\0';
-
-			for (int i = 0; i < S.size(); i++) {
-				char* paraContent = S[i]->getContent();
-				myStrcat(content, paraContent);
-				if (i < S.size() - 1) myStrcat(content, "\n\n"); 
-				delete[] paraContent;
-			}
-
-			return content;
-		}
+		char* getContent() const;
 
 		bool isLineEmpty(int lineIndex) {
 			for (int i = 0; i < S.size(); i++) { 

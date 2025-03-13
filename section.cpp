@@ -22,32 +22,13 @@ void section::addline(int cursorRow) {
 }
 
 
-
-//void section::insertAt(int lineIndex, int columnIndex, char sym) {
-//    int paraIndex = getParagraphNumber(lineIndex);
-//    if (paraIndex < 0 || paraIndex >= S.size())
-//        return;
-//
-//    int relativeLineIndex = lineIndex; 
-//    if (paraIndex > 0) {
-// 
-//        int offset = 0;
-//        for (int i = 0; i < paraIndex; i++) {
-//            offset += S[i]->paragraphSize();
-//        }
-//        relativeLineIndex -= offset;
-//    }
-//
-//    S[paraIndex]->insertAt(relativeLineIndex, columnIndex, sym);
-//}
-
 void section::insertAt(int lineIndex, int columnIndex, char sym) {
     int paraIndex = getParagraphNumber(lineIndex);
 
-    // If paragraph index is invalid, create a new paragraph
+
     if (paraIndex < 0 || paraIndex >= S.size()) {
-        S.push_back(new paragraph());  // Create new paragraph if needed
-        paraIndex = S.size() - 1;  // Update paraIndex to new paragraph
+        S.push_back(new paragraph()); 
+        paraIndex = S.size() - 1;  
     }
 
     int relativeLineIndex = lineIndex;
@@ -59,7 +40,7 @@ void section::insertAt(int lineIndex, int columnIndex, char sym) {
         relativeLineIndex -= offset;
     }
 
-    // Insert character into the paragraph
+
     S[paraIndex]->insertAt(relativeLineIndex, columnIndex, sym);
 }
 
@@ -129,16 +110,6 @@ void section::deleteFrom(int lineIndex, int columnIndex) {
 }
 
 
-//void section::print(int i) {
-//    for ( i = 0; i < S.size(); i++) {
-//        if (S[i] != nullptr) {
-//            S[i]->printParagraph();
-//            cout << endl;
-//        }
-//
-//            
-//    }
-//}
 void section::print(int sectionIndex) {
     //cout << "  --- Section " << sectionIndex + 1 << " ---\n";
 
@@ -294,3 +265,25 @@ void section::writeToFile(const char* filename) const {
     outputFile.close();
 }
 
+char* section::getContent() const {
+    int totalSize = 0;
+    std::vector<char*> paraContents;
+
+    for (int i = 0; i < S.size(); i++) {
+        char* paraContent = S[i]->getContent();
+        paraContents.push_back(paraContent);
+        totalSize += strsize(paraContent) + 1;  // 1 for '\n'
+    }
+
+    char* content = new char[totalSize + 1];
+    content[0] = '\0';
+
+    for (size_t i = 0; i < paraContents.size(); i++) {
+        myStrcat(content, paraContents[i]);
+        if (i < paraContents.size() - 1) myStrcat(content, "\n");
+
+        delete[] paraContents[i];
+    }
+
+    return content;
+}

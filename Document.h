@@ -47,75 +47,21 @@ public:
 
     void writeToFile(const char* filenanme);
   
-    void print() {
-        for (int i = 0; i < D.size(); i++) {
-            if (D[i] != nullptr) {
-                D[i]->printChapter();
-            }
-        }
-        cout << endl << endl << endl;
-    }
-
-
-    char* getContent() const {
-        int totalSize = 0;
-        for (int i = 0; i < D.size(); i++) {
-            char* chapContent = D[i]->getContent();
-            totalSize += strsize(chapContent) + 4; // +4 for chapter separator "\n\n\n\n"
-            delete[] chapContent;
-        }
-
-        char* content = new char[totalSize + 1]; // Extra space for '\0'
-        content[0] = '\0';
-
-        for (int i = 0; i < D.size(); i++) {
-            char* chapContent = D[i]->getContent();
-            myStrcat(content, chapContent);
-            if (i < D.size() - 1) myStrcat(content, "\n\n\n\n"); // Separate chapters
-            delete[] chapContent;
-        }
-
-        return content;
-    }
-
-    void insertParagraph(int cursorRow) {
-        int chapterIndex = getChapterNumber(cursorRow);
-        if (chapterIndex < 0 || chapterIndex >= D.size()) return;
-
-        int sectionIndex = D[chapterIndex]->getSectionNumber(cursorRow);
-        if (sectionIndex < 0 || sectionIndex >= D[chapterIndex]->chapterSize()) return;
-
-        section* sec = D[chapterIndex]->getSection(sectionIndex);
-        if (sec) {
-            sec->addparagraph();
-        }
-    }
-
-    void insertSection(int cursorRow) {
-        int chapterIndex = getChapterNumber(cursorRow);
-        if (chapterIndex < 0 || chapterIndex >= D.size()) return;
-
-        D[chapterIndex]->addSection();
-    }
-
-    void insertChapter(int cursorRow) {
-        D.push_back(new chapter());
-    }
-
     void sectionSize(int lineIndex);
 
-    bool isLineEmpty(int lineIndex) {
-        for (int i = 0; i < D.size(); i++) {  
-            if (!D[i]->isLineEmpty(lineIndex)) {
-                return false;  
-            }
-        }
-        return true; 
-    }
+    char* getContent() const;
 
-    void addSection(int lineIndex) {
+    void insertParagraph(int cursorRow);
 
-        D[getChapterNumber(lineIndex)]->addSection();
-    }
+    void insertSection(int cursorRow);
+
+
+    void insertChapter(int cursorRow);
+
+    void print();
+
+    bool isLineEmpty(int lineIndex);
+
+    void addSection(int lineIndex);
   
 };

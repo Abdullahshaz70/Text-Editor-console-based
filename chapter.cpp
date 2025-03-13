@@ -212,12 +212,49 @@ void chapter:: print() {
     }
 }
 
-//void chapter::print(int chapterIndex) {
-//    //cout << "\n======= Chapter " << chapterIndex + 1 << " =======\n";
-//
-//    for (int i = 0; i < C.size(); i++) {
-//        if (C[i] != nullptr) {
-//            C[i]->print(i); 
-//        }
-//    }
-//}
+void chapter::printChapter() {
+    for (int i = 0; i < C.size(); i++) {
+        if (C[i] != nullptr) {
+            C[i]->printSection();
+        }
+    }
+    cout << endl << endl;
+}
+
+section* chapter::getSection(int sectionIndex) {
+    if (sectionIndex < 0 || sectionIndex >= C.size()) return nullptr;
+    return C[sectionIndex];
+}
+
+
+char* chapter::getContent() const {
+    int totalSize = 0;
+    std::vector<char*> sectionContents;
+
+    for (int i = 0; i < C.size(); i++) {
+        char* secContent = C[i]->getContent();
+        sectionContents.push_back(secContent);
+        totalSize += strsize(secContent) + 1;  
+    }
+
+    char* content = new char[totalSize + 1];
+    content[0] = '\0';
+
+    for (size_t i = 0; i < sectionContents.size(); i++) {
+        myStrcat(content, sectionContents[i]);
+        if (i < sectionContents.size() - 1) myStrcat(content, "\n");
+
+        delete[] sectionContents[i];
+    }
+
+    return content;
+}
+
+bool chapter::isLineEmpty(int lineIndex) {
+    for (int i = 0; i < C.size(); i++) {
+        if (!C[i]->isLineEmpty(lineIndex)) {
+            return false;
+        }
+    }
+    return true;
+}

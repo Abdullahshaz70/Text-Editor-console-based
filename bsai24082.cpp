@@ -6,12 +6,14 @@
 using namespace std;
 #define MAX_LENGHT_LINE 80
 #define MAX_LENGHT_PAGE 30
-int cursorRow = 0, cursorColumn = 0 , x=0;
-int enterCount = 0;
-paragraph p;
-section S;
-chapter C;
+int cursorRow = 0, cursorColumn = 0;
+//int enterCount = 0;
+//paragraph p;
+//section S;
+//chapter C;
 document D;
+
+
 
 void modeChanges(char sym) {
     if (sym == 'i')
@@ -26,15 +28,6 @@ void modeChanges(char sym) {
     else if (int(sym) == 27 and commandMode)
         commandMode = false, normalMode = true;
 
-  /* 
-
-    gotoRowCol(50, 90);
-    if (insertionMode)
-        cout << "insertionmode";
-    else if (commandMode)
-        cout << "commandMode";
-    else if (normalMode)
-        cout << "normalMode";*/
 }
 
 
@@ -229,13 +222,11 @@ int main() {
 
                     D.insertAt(cursorRow, cursorColumn, sym);
                     cursorColumn++;
-                    enterCount = 0;
-
+                  
 
                     break;
                 }
-            }
-        
+            }  
         else if (normalMode) {
             switch (sym) {
             case 'h':

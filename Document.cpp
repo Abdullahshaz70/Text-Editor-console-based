@@ -179,85 +179,144 @@ void document::searchAndReplace(const char* oldWord, const char* newWord) {
     }
 }
 
-//void document::print() {
-//    for (int i = 0; i < D.size(); i++) {
-//        if (D[i] != nullptr) {
-//            D[i]->print();
-//            std::cout << std::endl;
-//        }
-//    }
-//}
-
-
-
 void  document::sectionSize(int lineIndex) {
     D[getChapterNumber(lineIndex)]->chapterSize();
 }
 
+char* document::getContent() const {
+    int totalSize = 0;
+    vector<char*> chapterContents;
 
+    for (int i = 0; i < D.size(); i++) {
+        char* chapContent = D[i]->getContent();
+        chapterContents.push_back(chapContent);
+        totalSize += strsize(chapContent) + 1;  
+    }
+
+    char* content = new char[totalSize + 1];
+    content[0] = '\0';
+
+    for (int i = 0; i < chapterContents.size(); i++) {
+        myStrcat(content, chapterContents[i]);
+        if (i < chapterContents.size() - 1) myStrcat(content, "\n");
+
+        delete[] chapterContents[i];
+    }
+
+    return content;
+}
 
 void document::writeToFile(const char* filename) {
     ofstream file(filename);
-    if (!file) return;  
+    if (!file) return;
 
-    for (int i = 0; i < D.size(); i++) {  
-        if (i > 0) file << "\n\n\n\n";  
+    char* content = getContent();
+    int len = strsize(content);
 
-        for (int j = 0; j < D[i]->chapterSize(); j++) { 
+    int emptyLineCount = 0;
+    bool lastWasEmpty = false;
 
-            for (int k = 0; k < D[i]->sectionsize(j); k++) {  
-                if (k > 0) file << "\n\n";  
 
-                for (int l = 0; l < D[i]->getPragraphSize(k); l++) {  
-                    file << D[i]->getContent() << "\n";  
+    file << "#### CHAPTER ####\n\n";
+    file << "==== SECTION ====\n\n";
+    file << "---- Paragraph ----\n\n";
+
+    for (int i = 0; i < len; i++) {
+        if (content[i] == '\n') {
+            emptyLineCount++;
+            lastWasEmpty = true;
+        }
+        else {
+            if (lastWasEmpty) {
+     
+                if (emptyLineCount >= 3) {
+  
+                    file << "\n#### CHAPTER ####\n\n";
+                    file << "==== SECTION ====\n\n";
+                    file << "---- Paragraph ----\n\n";
                 }
+                else if (emptyLineCount == 2) {
+
+                    file << "\n==== SECTION ====\n\n";
+                    file << "---- Paragraph ----\n\n";
+                }
+                else if (emptyLineCount == 1) {
+  
+                    file << "\n---- Paragraph ----\n\n";
+                }
+
+                emptyLineCount = 0;
+                lastWasEmpty = false;
             }
+
+
+            file << (content[i] == ' ' ? '_' : content[i]);
         }
     }
 
-    file.close();  
+    if (lastWasEmpty) {
+        if (emptyLineCount >= 3) {
+            file << "\n#### CHAPTER ####\n\n";
+            file << "==== SECTION ====\n\n";
+            file << "---- Paragraph ----\n\n";
+        }
+        else if (emptyLineCount == 2) {
+            file << "\n==== SECTION ====\n\n";
+            file << "---- Paragraph ----\n\n";
+        }
+        else if (emptyLineCount == 1) {
+            file << "\n---- Paragraph ----\n\n";
+        }
+    }
+
+    delete[] content;
+    file.close();
+}
+
+void document::insertParagraph(int cursorRow) {
+    int chapterIndex = getChapterNumber(cursorRow);
+    if (chapterIndex < 0 || chapterIndex >= D.size()) return;
+
+    int sectionIndex = D[chapterIndex]->getSectionNumber(cursorRow);
+    if (sectionIndex < 0 || sectionIndex >= D[chapterIndex]->chapterSize()) return;
+
+    section* sec = D[chapterIndex]->getSection(sectionIndex);
+    if (sec) {
+        sec->addparagraph();
+    }
+}
+
+void document::insertSection(int cursorRow) {
+    int chapterIndex = getChapterNumber(cursorRow);
+    if (chapterIndex < 0 || chapterIndex >= D.size()) return;
+
+    D[chapterIndex]->addSection();
 }
 
 
+void document::insertChapter(int cursorRow) {
+    D.push_back(new chapter());
+}
 
-//void document::readFromFile(const char* filename) {
-//    ifstream file(filename);
-//    if (!file) return;
-//
-//    D.clear();
-//    string line;
-//    int newlineCount = 0;
-//    chapter* currentChapter = nullptr;
-//    section* currentSection = nullptr;
-//    paragraph* currentParagraph = nullptr;
-//
-//    while (getline(file, line)) {
-//        if (line.empty()) {
-//            newlineCount++;
-//            continue;
-//        }
-//
-//        if (newlineCount >= 4 || D.empty()) { // New Chapter
-//            D.push_back(new chapter());
-//            currentChapter = &D.back();
-//            currentChapter->addSection();
-//            currentSection = currentChapter->C.back();
-//            currentSection->addParagraph();
-//            currentParagraph = currentSection->S.back();
-//        }
-//        else if (newlineCount == 3) { // New Section
-//            currentChapter->addSection();
-//            currentSection = currentChapter->C.back();
-//            currentSection->addParagraph();
-//            currentParagraph = currentSection->S.back();
-//        }
-//        else if (newlineCount == 2) { // New Paragraph
-//            currentSection->addParagraph();
-//            currentParagraph = currentSection->S.back();
-//        }
-//
-//        currentParagraph->addLine(line);
-//        newlineCount = 0;
-//    }
-//    file.close();
-//}
+void document::print() {
+    for (int i = 0; i < D.size(); i++) {
+        if (D[i] != nullptr) {
+            D[i]->printChapter();
+        }
+    }
+    cout << endl << endl << endl;
+}
+
+bool document::isLineEmpty(int lineIndex) {
+    for (int i = 0; i < D.size(); i++) {
+        if (!D[i]->isLineEmpty(lineIndex)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void document::addSection(int lineIndex) {
+
+    D[getChapterNumber(lineIndex)]->addSection();
+}

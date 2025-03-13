@@ -1,0 +1,37 @@
+#### CHAPTER ####
+
+==== SECTION ====
+
+---- Paragraph ----
+
+The_quick_brown_fox_jumps_over_the_lazy_dog.
+==== SECTION ====
+
+---- Paragraph ----
+
+This_is_a_simple_sentence.
+==== SECTION ====
+
+---- Paragraph ----
+
+Another_paragraph_starts_here.
+==== SECTION ====
+
+---- Paragraph ----
+
+Now_we_enter_a_new_section.
+==== SECTION ====
+
+---- Paragraph ----
+
+This_is_another_section_with_content.
+==== SECTION ====
+
+---- Paragraph ----
+
+Finally,_we_create_a_new_chapter.
+==== SECTION ====
+
+---- Paragraph ----
+
+Here_is_the_content_after_a_new_chapter
