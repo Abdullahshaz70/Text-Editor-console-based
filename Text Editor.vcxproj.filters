@@ -18,9 +18,6 @@
     <ClCompile Include="bsai24082.cpp">
       <Filter>Header Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cursor.cpp">
-      <Filter>Header Files\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="line.cpp">
       <Filter>Header Files\Source Files</Filter>
     </ClCompile>
@@ -44,9 +41,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cursor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="line.h">
       <Filter>Header Files</Filter>
     </ClInclude>

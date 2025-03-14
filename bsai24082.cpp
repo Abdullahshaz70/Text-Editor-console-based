@@ -1,5 +1,4 @@
-﻿//#include"utility.h"
-#include <iostream>
+﻿#include <iostream>
 #include <conio.h>
 #include "mode.h"
 #include"Document.h"
@@ -7,10 +6,7 @@ using namespace std;
 #define MAX_LENGHT_LINE 80
 #define MAX_LENGHT_PAGE 30
 int cursorRow = 0, cursorColumn = 0;
-//int enterCount = 0;
-//paragraph p;
-//section S;
-//chapter C;
+
 document D;
 
 
@@ -29,8 +25,6 @@ void modeChanges(char sym) {
         commandMode = false, normalMode = true;
 
 }
-
-
 
 void moveUp() {
     if (cursorRow > 0) {
@@ -89,6 +83,7 @@ void backSpace() {
                 if (D.getLineSize(cursorRow) == 0) {
 
 
+
                     D.deleteLine(cursorRow);
                     //D.Erase(cursorRow);
 
@@ -130,36 +125,28 @@ void enter_Insertion() {
     gotoRowCol(cursorRow, cursorColumn);
 }
 
-//void enter_Insertion() {
-//
-//    D.insertLine(cursorRow, cursorColumn);
-//    cursorRow++;
-//    cursorColumn = 0;
-//
-//
-//    if (D.isLineEmpty(cursorRow - 1)) {
-//        char choice;
-//        cout << "Press 's' for Section, 'c' for Chapter, or Enter to continue: ";
-//        cin >> choice;
-//
-//        if (choice == 's' || choice == 'S') {
-//            D.insertSection(cursorRow);
-//            enterCount = 0;
-//            cursorRow += 2;
-//        }
-//        else if (choice == 'c' || choice == 'C') {
-//            D.addChapter();
-//            enterCount = 0;
-//            cursorRow += 3;
-//        }
-//    }
-//
-//    gotoRowCol(cursorRow, cursorColumn);
-//}
-//
-
+void showMenu() {
+    std::cout << "████████╗███████╗██╗  ██╗████████╗    ███████╗██████╗ ███████╗████████╗ ██████╗ ██████╗ \n";
+    std::cout << "╚══██╔══╝██╔════╝██║  ██║╚══██╔══╝    ██╔════╝██╔══██╗██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗\n";
+    std::cout << "   ██║   █████╗  ███████║   ██║       █████╗  ██████╔╝███████╗   ██║   ██║   ██║██████╔╝\n";
+    std::cout << "   ██║   ██╔══╝  ██╔══██║   ██║       ██╔══╝  ██╔══██╗╚════██║   ██║   ██║   ██║██╔═══╝ \n";
+    std::cout << "   ██║   ███████╗██║  ██║   ██║       ███████╗██║  ██║███████║   ██║   ╚██████╔╝██║     \n";
+    std::cout << "   ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝       ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝     \n";
+   
+}
 
 int main() {
+
+    char sym='0';
+    showMenu();
+    do {
+        if (_kbhit())
+        {
+            sym = _getch();
+        }
+    } while (sym != 32);
+
+    system("cls");
 
     normalMode = true;
     D.addChapter();
@@ -399,12 +386,10 @@ int main() {
             }
 
         }
+
             gotoRowCol(0, 0);
 
-
-
             D.print();
-
 
             gotoRowCol(cursorRow, cursorColumn);
         }

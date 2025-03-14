@@ -17,7 +17,9 @@ line::line(const char* data) {
     if (data) {
         length = strsize(data);
         Cs = new char[length + 1];
-        //stringcopy(data);
+       
+
+
 
         for (int i = 0; i < length; i++) {
             Cs[i] = data[i];
@@ -234,6 +236,32 @@ void line::unindent(int cursorColumn) {
     length -= spacesToRemove;
 }
 
+int  line::strsize(const char* data) {
+    int count = 0;
+    for (int i = 0; data[i] != '\0'; i++)
+        count++;
+
+    return count;
+}
+bool  line::isEmpty() {
+    return Cs == nullptr or Cs[0] == '\0';
+}
+
+
+void  line::updateline(const char* newText) {
+    int newLength = 0;
+    while (newText[newLength] != '\0') newLength++;
+
+    char* newCs = new char[newLength + 1];
+    for (int i = 0; i < newLength; i++)
+        newCs[i] = newText[i];
+
+    newCs[newLength] = '\0';
+
+    delete[] Cs;
+    Cs = newCs;
+    length = newLength;
+}
 
 
 const char* line:: getContent() const {

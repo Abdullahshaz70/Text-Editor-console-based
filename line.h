@@ -44,32 +44,11 @@ public:
     const char* getContent() const;
     
   
- int strsize(const char* data) {
-     int count = 0;
-     for (int i = 0; data[i] != '\0'; i++)
-         count++;
-
-     return count;
- }
- bool isEmpty() {
-     return Cs == nullptr or Cs[0] == '\0';
- }
+    int strsize(const char* data);
+    bool isEmpty();
 
 
- void updateline (const char* newText) {
-     int newLength = 0;
-     while (newText[newLength] != '\0') newLength++; 
-
-     char* newCs = new char[newLength + 1];
-     for (int i = 0; i < newLength; i++)
-         newCs[i] = newText[i];
-
-     newCs[newLength] = '\0'; 
-
-     delete[] Cs; 
-     Cs = newCs;  
-     length = newLength; 
- }
+    void updateline(const char* newText);
 
  void printLine(); 
 

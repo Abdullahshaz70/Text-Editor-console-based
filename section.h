@@ -52,15 +52,7 @@ class section
 
 		void print(int i=0);
      
-		void printSection() {
-			for (int i = 0; i < S.size(); i++) {
-				if (S[i] != nullptr) {
-					S[i]->printParagraph();
-					
-				}
-			}
-		
-		}
+	
 
 
 		void Erase(int paragraphIndex);
@@ -71,15 +63,8 @@ class section
 
 		char* getContent() const;
 
-		bool isLineEmpty(int lineIndex) {
-			for (int i = 0; i < S.size(); i++) { 
-				if (!S[i]->isLineEmpty(lineIndex)) {
-					return false;  
-				}
-			}
-			return true;  
-		}
-
+		bool isLineEmpty(int lineIndex);
+		void printSection();
 
 };
 

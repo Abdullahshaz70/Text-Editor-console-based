@@ -61,21 +61,11 @@ public:
     void unindent(int lineIndex, int cursorColumn);
 
     
-    void printParagraph() {
-        for (int i = 0; i < P.size(); ++i) {
-            if (P[i] != nullptr) {
-                P[i]->printLine();
-                cout << endl;
-            }
-       
-        }
-        
-    }
+    void printParagraph();
+    void Erase(int lineindex);
 
     char* getContent() const;
-    void Erase(int lineindex) {
-        P.erase(P.begin() + lineindex);
-    }
+   
 
     void deleteline(int lineIndex);
 

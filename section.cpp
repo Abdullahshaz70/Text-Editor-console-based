@@ -287,3 +287,22 @@ char* section::getContent() const {
 
     return content;
 }
+
+
+bool section::isLineEmpty(int lineIndex) {
+    for (int i = 0; i < S.size(); i++) {
+        if (!S[i]->isLineEmpty(lineIndex)) {
+            return false;
+        }
+    }
+    return true;
+}
+void section::printSection() {
+    for (int i = 0; i < S.size(); i++) {
+        if (S[i] != nullptr) {
+            S[i]->printParagraph();
+
+        }
+    }
+
+}

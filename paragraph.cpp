@@ -145,12 +145,13 @@ void paragraph::pasteLine(int lineIndex) {
 
 	if (lineIndex < 0 || lineIndex >= paragraphSize()) return;
 
-	insertline(lineIndex, 0);  // Insert a new line at the given index
+	insertline(lineIndex, 0);  
 
-	line* newLine = getLine(lineIndex);  // Get the newly created line
+	line* newLine = getLine(lineIndex);                                                 
 
 	for (int i = 0; copyLine[i] != '\0'; i++) {
-		newLine->insertAt(i, copyLine[i]);  // Insert copied content character by character
+		newLine->insertAt(i, copyLine[i]);  
+
 	}
 }
 
@@ -315,7 +316,7 @@ void paragraph::writeToFile(const char* filename) const {
 char* paragraph::getContent() const {
 	int totalSize = 0;
 	for (int i = 0; i < P.size(); i++) {
-		totalSize += strsize(P[i]->getContent()) + 1;  // 1 for '\n'
+		totalSize += strsize(P[i]->getContent()) + 1;
 	}
 
 	char* content = new char[totalSize + 1];
@@ -333,6 +334,19 @@ void paragraph::deleteline(int lineIndex) {
 	P[lineIndex]->clear();
 }
 
+void paragraph::printParagraph() {
+	for (int i = 0; i < P.size(); ++i) {
+		if (P[i] != nullptr) {
+			P[i]->printLine();
+			cout << endl;
+		}
+
+	}
+
+}
+void paragraph::Erase(int lineindex) {
+	P.erase(P.begin() + lineindex);
+}
 
 
 void  paragraph::indent(int lineIndex, int cursorColumn) {
